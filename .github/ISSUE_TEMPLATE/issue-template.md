@@ -1,12 +1,3 @@
----
-name: Issue template
-about: 2026 블레이버스 파이팅이용 이슈 템플릿
-title: "[FEATURE] "
-labels: ''
-assignees: ''
-
----
-
 ### 🔍 설명
 -
 
