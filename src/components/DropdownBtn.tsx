@@ -42,7 +42,7 @@ export default function Dropdown({
       >
         {/* 드롭다운 메뉴들(인자로 받은 item 개수에 따라 생성) */}
         {/* ✅ 추후에 변경 예정 */}
-        <MenuItems className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md border border-slate-200 bg-white shadow-lg focus:outline-none">
+        <MenuItems className="absolute left-0 z-50 mt-1 w-48 origin-top-right rounded-md border border-slate-200 bg-white shadow-lg focus:outline-none">
           <div className="py-1">
             {items.map((item) => (
               <MenuItem

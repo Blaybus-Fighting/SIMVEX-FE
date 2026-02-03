@@ -1,9 +1,10 @@
 import Dropdown from "./DropdownBtn";
 import PartsDropdown from "./PartsDropdownBtn";
+import { ResolutionSlider } from "./ResolutionSlider";
 
 export default function Rendering3D() {
   return (
-    <div>
+    <div className="flex flex-col gap-[4.063rem] w-full text-left">
       {/* 배경색, 조명, 구성 부품 버튼 섹션 */}
       <section className="flex justify-between">
         <div className="flex gap-3">
@@ -81,6 +82,25 @@ export default function Rendering3D() {
             },
           ]}
         />
+      </section>
+
+      {/* 3D 부품(✅ TODO: 3D 부품 구현할 때 진행) */}
+      <div className="border border-white w-[663px] h-[554px] ml-[6.188rem]">
+        3D 렌더링 자리
+      </div>
+
+      {/* Q&A 버튼과 분해도 조절 슬라이드 */}
+      <section className="flex justify-between items-end">
+        <button className="rounded-full w-8 h-8 bg-[#2B3041] text-[#819EFF] font-semibold">
+          ?
+        </button>
+        <div className="flex gap-[0.813rem]">
+          {/* 축 기즈모(✅ TODO: 3D 부품 구현할 때 진행 */}
+          <div className="border border-white w-20 h-20" />
+
+          {/* 분해 조립도 슬라이더 */}
+          <ResolutionSlider />
+        </div>
       </section>
     </div>
   );
