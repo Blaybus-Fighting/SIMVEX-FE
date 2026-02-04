@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import Dropdown from "./DropdownBtn";
-import PartsDropdown from "./PartsDropdownBtn";
-import { ResolutionSlider } from "./ResolutionSlider";
+import Dropdown from "./ui/DropdownBtn";
+import PartsDropdown from "./ui/PartsDropdownBtn";
+import { ResolutionSlider } from "./ui/ResolutionSlider";
 
 export type Part = {
   id: string;

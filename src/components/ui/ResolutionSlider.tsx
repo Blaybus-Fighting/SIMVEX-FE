@@ -1,3 +1,4 @@
+// 분해도 조절 슬라이더
 import * as Slider from "@radix-ui/react-slider";
 import { useState } from "react";
 
