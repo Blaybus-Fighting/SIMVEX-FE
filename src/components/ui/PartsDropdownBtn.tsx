@@ -27,11 +27,6 @@ export default function PartsDropdown({
   parts,
   columns = 5,
 }: PartsDropdownProps) {
-  // 그리드에 보여줄 slot 수
-  const minSlots = 15; // 필요 시 조절
-  const slots: (Part | null)[] = [...parts];
-  while (slots.length < minSlots) slots.push(null);
-
   // tailwind grid-cols 는 동적 문자열이 빌드에서 누락될 수 있어 안전하게 매핑
   const gridColsClass =
     columns === 3
