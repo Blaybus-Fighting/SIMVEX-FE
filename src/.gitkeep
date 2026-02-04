@@ -24,6 +24,10 @@
 - bg-color-100, bg-color-200,
 - bg-color-300 bg-color-400
 
+### Accent
+
+- bg-accent-100, text-accent-100
+
 ## 2. fontSize
 
 ### 정의된 텍스트 타입

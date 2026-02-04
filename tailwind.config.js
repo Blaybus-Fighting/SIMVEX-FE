@@ -4,6 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
+        black: "#000000",
+
         // gray: 주로 텍스트나 구분 선에 사용
         gray: {
           100: "#F7F8F9",
@@ -20,6 +22,9 @@ export default {
           200: "#292B33",
           300: "#191B22",
           400: "#14161D",
+        },
+        accent: {
+          100: "#DB3847",
         },
       },
       fontSize: {
