@@ -17,7 +17,7 @@ export default {
           100: "#819EFF",
           200: "#2E53CE",
         },
-        color: {
+        background: {
           100: "#2B3041",
           200: "#292B33",
           300: "#191B22",
@@ -40,11 +40,16 @@ export default {
       },
 
       fontFamily: {
-        pl: ["Pretendard-Light"],
-        pr: ["Pretendard-Regular"],
-        pm: ["Pretendard-Medium"],
-        ps: ["Pretendard-SemiBold"],
-        pb: ["Pretendard-Bold"],
+        pretendard: [
+          "Pretendard",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
       },
     },
   },

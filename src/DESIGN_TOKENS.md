@@ -21,8 +21,8 @@
 
 ### Background
 
-- bg-color-100, bg-color-200,
-- bg-color-300 bg-color-400
+- bg-background-100, bg-background-200
+- bg-background-300, bg-background-400
 
 ### Accent
 
@@ -55,11 +55,7 @@
 
 ### 폰트 굵기 토큰
 
-- font-pl : Pretendard Light
-- font-pr : Pretendard Regular
-- font-pm : Pretendard Medium
-- font-ps : Pretendard SemiBold
-- font-pb : Pretendard Bold
+- 폰트 굵기는 font-light ~ font-bold로 사용
 
 ### 예시
 
