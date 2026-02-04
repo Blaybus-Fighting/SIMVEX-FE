@@ -1,3 +1,3 @@
 export default function Home() {
-  return <h1>홈 페이지</h1>;
+  return <div>홈페이지</div>;
 }

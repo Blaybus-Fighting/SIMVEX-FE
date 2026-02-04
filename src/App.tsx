@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Home from "@pages/Home";
+import Home from "@/pages/HomePage";
 import { AUTH_EVENT_NAME } from "@/utils/authEvent";
 import "./App.css";
+import Test from "@pages/TestPage";
 
 function App() {
     const navigate = useNavigate();
@@ -21,12 +22,13 @@ function App() {
 
 
   return (
-    <>
+    <div className="h-full">
       <Routes>
         {/* 라우팅 설정을 위해 임시로 만들어놓은 페이지 */}
         <Route path="/" element={<Home />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
