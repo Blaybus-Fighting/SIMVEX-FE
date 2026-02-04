@@ -2,8 +2,9 @@
 // 각 도메인 APi 호출 시 해당 'api' 변수 import 해서 사용해야 합니다.
 
 import axios from "axios";
+import { triggerAuthErrorEvent } from '@/utils/authEvent';
 
-// 1. 인스턴스 생성
+// 1. Axios 인스턴스 생성
 export const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
     timeout: 5000,
@@ -28,11 +29,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
-        // 401 에러(인증 실패)가 나면 로그아웃 처리
+        // 401 에러(인증 실패)가 뜨면 토큰 삭제
         if (error.response?.status === 401) {
             localStorage.removeItem("accessToken");
-            window.location.href = "/login"; // 로그인 페이지로 튕겨내기
+
+            triggerAuthErrorEvent();
         }
         return Promise.reject(error);
     }
 );
+
+export default api;
