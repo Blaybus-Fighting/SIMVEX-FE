@@ -1,3 +1,4 @@
+import Header from './components/common/Header';
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -8,6 +9,7 @@ function App() {
 
   return (
     <>
+      <Header />
       <div className="flex justify-center">
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
