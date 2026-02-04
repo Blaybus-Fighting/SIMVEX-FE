@@ -58,9 +58,10 @@ export default function Rendering3D({
   );
 
   return (
-    <div className="flex flex-col gap-[4.063rem] w-full text-left">
+    // 이 컴포넌트에 있는 페이지에도 h-full 적용해야 함
+    <div className="flex flex-col h-full justify-between">
       {/* 배경색, 조명, 구성 부품 버튼 섹션 */}
-      <section className="flex justify-between">
+      <section className="flex justify-between items-end">
         <div className="flex gap-3">
           <Dropdown
             buttonLabel="배경색"
