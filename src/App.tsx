@@ -6,19 +6,20 @@ import "./App.css";
 import Test from "@pages/TestPage";
 
 function App() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleUnauthorized = () => {
-      console.log("세션 만료됨! 로그인 페이지로 이동 예정");
-      navigate("/login", { replace: true });
-    };
+    useEffect(() => {
+        const handleUnauthorized = () => {
+            console.log("세션 만료됨! 로그인 페이지로 이동 예정");
+            navigate("/login", { replace: true });
+        };
 
-    window.addEventListener(AUTH_EVENT_NAME, handleUnauthorized);
-    return () => {
-      window.removeEventListener(AUTH_EVENT_NAME, handleUnauthorized);
-    };
-  }, [navigate]);
+        window.addEventListener(AUTH_EVENT_NAME, handleUnauthorized);
+        return () => {
+            window.removeEventListener(AUTH_EVENT_NAME, handleUnauthorized);
+        };
+    }, [navigate]);
+
 
   return (
     <div className="h-full">
