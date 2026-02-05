@@ -69,10 +69,7 @@ export function AiChatTab() {
   return (
     <div className="flex flex-col relative h-full overflow-hidden">
       {/* 스크롤 영역 */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto custom-scrollbar"
-      >
+      <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="space-y-4 pb-[200px]">
           {messages.map((msg) => (
             <div
@@ -82,8 +79,7 @@ export function AiChatTab() {
               <div className="flex max-w-[90%] gap-2">
                 {/* AI 아이콘 (AI일 때만 보임) */}
                 {msg.role === "ai" && (
-                  <div className="w-8 h-8 rounded-md bg-[#4B5563] shrink-0 flex items-center justify-center mt-1">
-                  </div>
+                  <div className="w-8 h-8 rounded-md bg-[#4B5563] shrink-0 flex items-center justify-center mt-1"></div>
                 )}
 
                 {/* 말풍선 */}
@@ -104,10 +100,8 @@ export function AiChatTab() {
           {isLoading && (
             <div className="flex w-full justify-start animate-pulse">
               <div className="flex max-w-[80%] gap-2">
-                <div className="w-8 h-8 rounded-md bg-background-100 shrink-0 flex items-center justify-center mt-1">
-                </div>
-                <div
-                  className="p-3 rounded-2xl bg-background-200 text-gray-300 text-sm rounded-tl-sm flex items-center">
+                <div className="w-8 h-8 rounded-md bg-background-100 shrink-0 flex items-center justify-center mt-1"></div>
+                <div className="p-3 rounded-2xl bg-background-200 text-gray-300 text-sm rounded-tl-sm flex items-center">
                   생각중...
                 </div>
               </div>
@@ -117,25 +111,21 @@ export function AiChatTab() {
       </div>
 
       {/* 입력창 - 절대 위치로 하단 고정 */}
-      <div
-        className="absolute bottom-0 left-0 right-0 px-1 pb-4 pt-6">
-
-        <div
-          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-lg overflow-hidden transition-colors flex focus-within:border-primary-200">
-    <textarea
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleSend();
-        }
-      }}
-
-      className="w-full h-auto max-h-[200px] bg-transparent py-4 pl-4 pr-12 text-white text-sm resize-none outline-none placeholder:text-gray-500 overflow-y-auto custom-scrollbar leading-relaxed"
-      placeholder="무엇이 궁금한가요?"
-      rows={3}
-    />
+      <div className="absolute bottom-0 left-0 right-0 px-1 pb-4 pt-6">
+        <div className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-lg overflow-hidden transition-colors flex focus-within:border-primary-200">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            className="w-full h-auto max-h-[200px] bg-transparent py-4 pl-4 pr-12 text-white text-sm resize-none outline-none placeholder:text-gray-500 overflow-y-auto custom-scrollbar leading-relaxed"
+            placeholder="무엇이 궁금한가요?"
+            rows={3}
+          />
 
           {/* 전송 버튼 (우측 하단 고정) */}
           <button
@@ -143,7 +133,7 @@ export function AiChatTab() {
             disabled={!input.trim()}
             className="absolute bottom-3 right-3 w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
-            <ArrowUpIcon className="w-4 h-4 text-white"/>
+            <ArrowUpIcon className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>

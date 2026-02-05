@@ -4,11 +4,12 @@ interface NoteCardProps {
   preview: string;
 }
 
-export function NoteCard({title, date, preview}: NoteCardProps) {
+export function NoteCard({ title, date, preview }: NoteCardProps) {
   return (
     <button
       type="button"
-      className="bg-background-300 rounded-lg p-5 cursor-pointer border border-transparent hover:border-primary-100 transition-all text-left w-full">
+      className="bg-background-300 rounded-lg p-5 cursor-pointer border border-transparent hover:border-primary-100 transition-all text-left w-full"
+    >
       {/* 본문 미리보기 */}
       <p className="text-text-4 text-gray-400 mb-4 line-clamp-3 h-[4.5em]">
         {preview}
@@ -20,9 +21,7 @@ export function NoteCard({title, date, preview}: NoteCardProps) {
       </h3>
 
       {/* 날짜 */}
-      <span className="text-caption text-gray-400">
-        {date}
-      </span>
+      <span className="text-caption text-gray-400">{date}</span>
     </button>
   );
 }
