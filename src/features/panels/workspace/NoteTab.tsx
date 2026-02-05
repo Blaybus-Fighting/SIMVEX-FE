@@ -11,6 +11,7 @@ export function NoteTab() {
     return (
       <div className="flex flex-col h-full relative text-white animate-in fade-in duration-200">
         <button
+          type="button"
           onClick={() => setIsWriting(false)}
           className="absolute -top-1 right-0 text-gray-400 hover:text-white p-2"
         >

@@ -14,6 +14,7 @@ export function TabSwitcher({leftLabel, rightLabel, activeTab, onChange}: TabSwi
 
       {/* 2. 클릭 가능한 투명 버튼들 (기능 담당) */}
       <button
+        type="button"
         onClick={() => onChange("LEFT")}
         className={cn(
           "flex-1 py-3 text-center rounded-lg relative z-10 transition-colors font-medium",
@@ -24,6 +25,7 @@ export function TabSwitcher({leftLabel, rightLabel, activeTab, onChange}: TabSwi
       </button>
 
       <button
+        type="button"
         onClick={() => onChange("RIGHT")}
         className={cn(
           "flex-1 py-3 text-center rounded-lg relative z-10 transition-colors font-medium",
