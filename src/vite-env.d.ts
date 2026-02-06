@@ -8,3 +8,14 @@ declare module "*.svg?react" {
   >;
   export default ReactComponent;
 }
+
+// 일반 CSS side-effect import 허용
+declare module "*.css";
+
+// Swiper CSS 엔트리들 side-effect import 허용
+declare module "swiper/css";
+declare module "swiper/css/pagination";
+declare module "swiper/css/navigation";
+declare module "swiper/css/autoplay";
+declare module "swiper/css/effect-fade";
+declare module "swiper/css/effect-coverflow";
