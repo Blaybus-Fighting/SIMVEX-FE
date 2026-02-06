@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ArrowUpIcon from "@/assets/icons/arrow_upward.svg?react";
+import AiLogo from "@/assets/icons/ai_logo.svg?react";
 
 // API & Type
 import { getChatHistory } from "@/api/chatApi";
@@ -192,7 +193,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU0OTI4MTY4NTQ2NDU4MzE4MTAiLCJpZCI6MSwibmFtZSI6IkpleW9uZyBMZWUiLCJlbWFpbCI6ImxlZWFuNjY1MkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzcwMzgzNTM1LCJleHAiOjE3NzE2Nzk1MzV9.2bt8Vra8RWrqNgjYhjvHg1PwPTng-NN_yLkvfCZJw4A",
         },
         body: JSON.stringify({
           question: currentInput,
@@ -263,45 +264,62 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto custom-scrollbar"
       >
-        <div className="space-y-4 pb-[200px]">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex w-full ${msg.chatRole === "USER" ? "justify-end" : "justify-start"}`}
-            >
-              <div className="flex max-w-[90%] gap-2">
-                {/* AI 아이콘 */}
-                {msg.chatRole === "ASSISTANT" && (
-                  <div className="w-8 h-8 rounded-md bg-[#4B5563] shrink-0 flex items-center justify-center mt-1">
-                    {/* 로고 아이콘 */}
-                    <div className="w-4 h-4 bg-[#9CA3AF] rounded-sm opacity-50"/>
-                  </div>
-                )}
+        {/* 메시지가 0개면 '초기 화면', 1개라도 있으면 '채팅 목록' 표시 */}
+        {messages.length === 0 ? (
+          // 초기 안내 화면 (중앙 정렬)
+          <div className="h-full flex flex-col items-center justify-center pb-20 gap-6 select-none">
+            {/* 로고 아이콘 (네온 효과나 색상은 SVG 자체에 있거나 여기서 className으로 조절) */}
+            <div className="relative">
+              <AiLogo className="w-20 h-20 text-primary-200"/>
+              {/* 필요하다면 뒤에 은은한 광원 효과 추가 가능 */}
+              <div className="absolute inset-0 bg-primary-200 blur-2xl opacity-20"/>
+            </div>
 
-                {/* 말풍선 */}
-                <div
-                  className={`p-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                    msg.chatRole === "USER"
-                      ? "bg-background-100 text-gray-100 rounded-tr-sm"
-                      : "bg-background-200 text-gray-100 rounded-tl-sm"
-                  }`}
-                >
-                  {/* 스트리밍 중일 때 메시지가 비어있으면 로딩 표시 */}
-                  {msg.chatRole === "ASSISTANT" && msg.message === "" && isLoading ? (
-                    <span className="animate-pulse">...</span>
-                  ) : (
-                    msg.message
+            <div className="text-center space-y-2">
+              <p className="text-gray/100 text-lg font-medium">안녕하세요!</p>
+              <p className="text-gray/100 text-lg font-medium">무엇을 도와드릴까요?</p>
+            </div>
+          </div>
+        ) : (
+          // 기존 채팅 목록
+          <div className="space-y-4 px-4 pt-4 pb-[200px]">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex w-full ${msg.chatRole === "USER" ? "justify-end" : "justify-start"}`}
+              >
+                <div className="flex max-w-[90%] gap-2">
+                  {/* AI 아이콘 */}
+                  {msg.chatRole === "ASSISTANT" && (
+                    <div className="w-8 h-8 rounded-md shrink-0 flex items-center justify-center mt-1">
+                      <AiLogo className="w-8 h-8 text-white"/>
+                    </div>
                   )}
+
+                  {/* 말풍선 */}
+                  <div
+                    className={`p-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+                      msg.chatRole === "USER"
+                        ? "bg-background-100 text-gray-100 rounded-tr-sm"
+                        : "bg-background-200 text-gray-100 rounded-tl-sm"
+                    }`}
+                  >
+                    {msg.chatRole === "ASSISTANT" && msg.message === "" && isLoading ? (
+                      <span className="animate-pulse">...</span>
+                    ) : (
+                      msg.message
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 입력창 - 절대 위치로 하단 고정 */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-1 pb-4 pt-6">
+        className="absolute bottom-0 left-0 right-0 px-1 pb-5 pt-6">
 
         <div
           className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-lg overflow-hidden transition-colors flex focus-within:border-primary-200">
