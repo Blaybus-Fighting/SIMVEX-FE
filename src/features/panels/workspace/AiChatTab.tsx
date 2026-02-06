@@ -119,23 +119,29 @@ export function AiChatTab() {
       {/* 입력창 - 절대 위치로 하단 고정 */}
       <div
         className="absolute bottom-0 left-0 right-0 px-1 pb-4 bg-gradient-to-t from-background-200 via-background-200 to-transparent pt-6">
-        <div
-          className="relative w-full h-40 bg-background-100 border border-white/10 rounded-xl overflow-hidden transition-colors">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            className="w-full h-auto max-h-[200px] bg-transparent py-4 pl-4 pr-12 text-white text-sm resize-none outline-none placeholder:text-gray-500 overflow-y-auto custom-scrollbar leading-relaxed"
-            placeholder="무엇이 궁금한가요?"
-            rows={1}
-          />
 
-          {/* 전송 버튼 (우측 하단) */}
+        {/* 1. min-h-[80px]: 너무 얇지 않게, 적당한 두께감 확보 */}
+        {/* 2. items-end 제거: 텍스트가 위에서부터 자연스럽게 채워짐 */}
+        <div
+          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-3xl overflow-hidden transition-colors flex">
+
+    <textarea
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSend();
+        }
+      }}
+      // 3. rows={3}: 기본적으로 3줄 정도의 높이를 가짐
+      // py-4: 위아래 여백을 넉넉하게 줘서 답답하지 않음
+      className="w-full h-auto max-h-[200px] bg-transparent py-4 pl-4 pr-12 text-white text-sm resize-none outline-none placeholder:text-gray-500 overflow-y-auto custom-scrollbar leading-relaxed"
+      placeholder="무엇이 궁금한가요?"
+      rows={3}
+    />
+
+          {/* 전송 버튼 (우측 하단 고정) */}
           <button
             onClick={handleSend}
             disabled={!input.trim()}
