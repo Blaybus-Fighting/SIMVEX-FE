@@ -1,5 +1,7 @@
 // 분해도 조절 슬라이더
 import * as Slider from "@radix-ui/react-slider";
+import ExplodeZero from "@assets/icons/explode_zero.svg?react";
+import ExplodeFull from "@assets/icons/explode_full.svg?react";
 
 type ResolutionSliderProps = {
   value: number; // 0 ~ 1
@@ -13,9 +15,7 @@ export function ResolutionSlider({ value, onChange }: ResolutionSliderProps) {
 
       <div className="flex items-center gap-3">
         {/* 최소값 */}
-        <span className="w-2 text-xs font-normal text-white tabular-nums">
-          {value}
-        </span>
+        <ExplodeZero />
 
         <Slider.Root
           className="relative flex h-6 items-center"
@@ -32,7 +32,7 @@ export function ResolutionSlider({ value, onChange }: ResolutionSliderProps) {
         </Slider.Root>
 
         {/* 최대값 */}
-        <span className="text-xs text-white">100</span>
+        <ExplodeFull />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import * as THREE from "three";
 import { useMemo } from "react";
+import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
@@ -59,6 +59,7 @@ type ModelProps = ThreeElements["group"] & {
    * - 슬라이더가 0~100이면 부모에서 explodePct / 100 해서 내려주세요.
    */
   explode?: number;
+  selectedPart?: string | null;
 };
 
 type PartKey =
@@ -82,11 +83,43 @@ type PartKey =
   | "Base_Gear"
   | "Glipper_2";
 
-export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
+export function RobotGlipper({
+  explode = 0,
+  selectedPart,
+  ...props
+}: ModelProps) {
   const { nodes, materials } = useGLTF(
     "/models/Robot Glipper.glb",
   ) as unknown as GLTFResult;
 
+  const ghostMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#ffffff",
+        transparent: true,
+        opacity: 0.08,
+        depthWrite: false,
+        metalness: 0,
+        roughness: 1,
+      }),
+    [],
+  );
+
+  // 선택 판정 함수 (중요: Pin/Link 같은 “묶음” 처리)
+  const isSelected = (meshName: string) => {
+    if (!selectedPart) return true;
+
+    // 선택한 부품이 해당 부품과 이름이 동일한지 체크
+    if (meshName === selectedPart) return true;
+
+    // 묶음 규칙: Pin 선택 시 Pin_2, Pin_3... 전부 포함
+    if (selectedPart === "Pin")
+      return meshName === "Pin" || meshName.startsWith("Pin_");
+    if (selectedPart === "Link") return meshName.startsWith("Link_");
+    if (selectedPart === "Gear_Link") return meshName.startsWith("Gear_Link_");
+
+    return false;
+  };
   /**
    * 원래 위치들(base) - gltfjsx 코드 값 그대로
    * - position이 없는 Base_Plate는 (0,0,0)으로 둠
@@ -206,7 +239,12 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_9.geometry}
-          material={materials["ChromePolished.011"]}
+          // 선택될 경우 현재 색상으로, 선택되지 않은 경우 투명색상으로
+          material={
+            isSelected("Pin_9")
+              ? materials["ChromePolished.011"]
+              : ghostMaterial
+          }
           position={pos("Pin_9")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.05, 0.1, 0.1]}
@@ -216,7 +254,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_8.geometry}
-          material={materials["ChromePolished.012"]}
+          material={
+            isSelected("Pin_8")
+              ? materials["ChromePolished.012"]
+              : ghostMaterial
+          }
           position={pos("Pin_8")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.08, 0.1, 0.1]}
@@ -226,7 +268,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_7.geometry}
-          material={materials["ChromePolished.013"]}
+          material={
+            isSelected("Pin_9")
+              ? materials["ChromePolished.013"]
+              : ghostMaterial
+          }
           position={pos("Pin_7")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.08, 0.1, 0.1]}
@@ -236,7 +282,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_6.geometry}
-          material={materials["ChromePolished.015"]}
+          material={
+            isSelected("Pin_9")
+              ? materials["ChromePolished.015"]
+              : ghostMaterial
+          }
           position={pos("Pin_6")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.07, 0.1, 0.1]}
@@ -246,7 +296,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_5.geometry}
-          material={materials["ChromePolished.014"]}
+          material={
+            isSelected("Pin_5")
+              ? materials["ChromePolished.014"]
+              : ghostMaterial
+          }
           position={pos("Pin_5")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.05, 0.1, 0.1]}
@@ -256,7 +310,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_4.geometry}
-          material={materials["ChromePolished.016"]}
+          material={
+            isSelected("Pin_4")
+              ? materials["ChromePolished.016"]
+              : ghostMaterial
+          }
           position={pos("Pin_4")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.05, 0.1, 0.1]}
@@ -266,7 +324,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_3.geometry}
-          material={materials["ChromePolished.017"]}
+          material={
+            isSelected("Pin_3")
+              ? materials["ChromePolished.017"]
+              : ghostMaterial
+          }
           position={pos("Pin_3")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.07, 0.1, 0.1]}
@@ -276,7 +338,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_2.geometry}
-          material={materials["ChromePolished.018"]}
+          material={
+            isSelected("Pin_2")
+              ? materials["ChromePolished.018"]
+              : ghostMaterial
+          }
           position={pos("Pin_2")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.055, 0.1, 0.1]}
@@ -286,7 +352,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin_10.geometry}
-          material={materials["ChromePolished.010"]}
+          material={
+            isSelected("Pin_10")
+              ? materials["ChromePolished.010"]
+              : ghostMaterial
+          }
           position={pos("Pin_10")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.05, 0.1, 0.1]}
@@ -296,7 +366,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Pin.geometry}
-          material={materials["ChromePolished.019"]}
+          material={
+            isSelected("Pin") ? materials["ChromePolished.019"] : ghostMaterial
+          }
           position={pos("Pin")}
           rotation={[0, 0, -Math.PI / 2]}
           scale={[0.055, 0.1, 0.1]}
@@ -306,7 +378,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Link_2.geometry}
-          material={materials["Cyan.002"]}
+          material={
+            isSelected("Link_2") ? materials["Cyan.002"] : ghostMaterial
+          }
           position={pos("Link_2")}
           rotation={[Math.PI / 2, -Math.PI / 2, 0]}
           scale={0.1}
@@ -316,7 +390,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Link_1.geometry}
-          material={materials["Cyan.003"]}
+          material={
+            isSelected("Link_1") ? materials["Cyan.003"] : ghostMaterial
+          }
           position={pos("Link_1")}
           rotation={[Math.PI / 2, -Math.PI / 2, 0]}
           scale={0.1}
@@ -326,7 +402,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Gripper.geometry}
-          material={materials["LightRed.003"]}
+          material={
+            isSelected("Gripper") ? materials["LightRed.003"] : ghostMaterial
+          }
           position={pos("Gripper")}
           rotation={[Math.PI / 2, 0, 2.793]}
           scale={0.1}
@@ -336,7 +414,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Gear_Link_2.geometry}
-          material={materials["Orange.002"]}
+          material={
+            isSelected("Gear_Link_2") ? materials["Orange.002"] : ghostMaterial
+          }
           position={pos("Gear_Link_2")}
           rotation={[Math.PI / 2, 0, 3.019]}
           scale={0.1}
@@ -346,7 +426,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Gear_Link_1.geometry}
-          material={materials["OrangeRed.001"]}
+          material={
+            isSelected("Gear_Link_1")
+              ? materials["OrangeRed.001"]
+              : ghostMaterial
+          }
           position={pos("Gear_Link_1")}
           rotation={[-Math.PI / 2, Math.PI / 2, 0]}
           scale={0.1}
@@ -356,7 +440,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Base_Plate.geometry}
-          material={materials["ChromePolishedBlack.001"]}
+          material={
+            isSelected("Base_Plate")
+              ? materials["ChromePolishedBlack.001"]
+              : ghostMaterial
+          }
           position={pos("Base_Plate")}
           rotation={[-Math.PI / 2, 0, Math.PI / 2]}
           scale={0.1}
@@ -366,7 +454,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Base_Mounting_bracket.geometry}
-          material={materials["ChromePolishedBlue.002"]}
+          material={
+            isSelected("Base_Mounting_bracket")
+              ? materials["ChromePolishedBlue.002"]
+              : ghostMaterial
+          }
           position={pos("Base_Mounting_bracket")}
           rotation={[Math.PI, 0, Math.PI]}
           scale={0.1}
@@ -376,7 +468,11 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Base_Gear.geometry}
-          material={materials["GlossyBlack.002"]}
+          material={
+            isSelected("Base_Gear")
+              ? materials["GlossyBlack.002"]
+              : ghostMaterial
+          }
           position={pos("Base_Gear")}
           rotation={[0, 0, Math.PI / 2]}
           scale={[0.07, 0.1, 0.1]}
@@ -386,7 +482,9 @@ export function RobotGlipper({ explode = 0, ...props }: ModelProps) {
           castShadow
           receiveShadow
           geometry={nodes.Glipper_2.geometry}
-          material={materials["LightRed.004"]}
+          material={
+            isSelected("Glipper_2") ? materials["LightRed.004"] : ghostMaterial
+          }
           position={pos("Glipper_2")}
           rotation={[-Math.PI / 2, 0, 2.793]}
           scale={0.1}

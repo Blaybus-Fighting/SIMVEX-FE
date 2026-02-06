@@ -2,15 +2,17 @@ import { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 // import * as THREE from "three";
-// import { Suspension } from "./models/Suspension";
-import { RobotGlipper } from "./models/RobotGlippers";
+import { Suspension } from "./models/Suspension";
+// import { RobotGlipper } from "./models/RobotGlippers";
+// import { RobotGlipper } from "./models/RobotGlippers";
 
 type Props = {
   explode: number; // 0~1
   url: string;
+  selectedPart: string | null;
 };
 
-export default function ExplodeViewer({ explode, url }: Props) {
+export default function ExplodeViewer({ explode, url, selectedPart }: Props) {
   useEffect(() => {
     if (url) useGLTF.preload(url);
   }, [url]);
@@ -46,7 +48,8 @@ export default function ExplodeViewer({ explode, url }: Props) {
         {/* HDRI 환경광(선택). 없어도 됨 */}
         <Environment preset="warehouse" />
 
-        <RobotGlipper explode={explode} />
+        {/* <RobotGlipper explode={explode} selectedPart={selectedPart} /> */}
+        <Suspension explode={explode} selectedPart={selectedPart} />
       </Suspense>
 
       {/* 마우스 회전/줌 */}
