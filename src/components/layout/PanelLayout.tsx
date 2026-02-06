@@ -24,7 +24,7 @@ export function PanelLayout({header, children, className}: PanelLayoutProps) {
 
       {/* 2. 본문 영역 (회색 박스) */}
       {/* overflow-hidden: 내용이 많아도 박스 밖으로 안 튀어나오게 */}
-      <div className="flex-1 bg-background-200 overflow-hidden relative flex flex-col">
+      <div className="flex-1 overflow-hidden relative flex flex-col">
         {children}
       </div>
 

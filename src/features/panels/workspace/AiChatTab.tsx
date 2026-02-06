@@ -118,10 +118,8 @@ export function AiChatTab() {
 
       {/* 입력창 - 절대 위치로 하단 고정 */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-1 pb-4 bg-gradient-to-t from-background-200 via-background-200 to-transparent pt-6">
+        className="absolute bottom-0 left-0 right-0 px-1 pb-4 background-200 to-transparent pt-6">
 
-        {/* 1. min-h-[80px]: 너무 얇지 않게, 적당한 두께감 확보 */}
-        {/* 2. items-end 제거: 텍스트가 위에서부터 자연스럽게 채워짐 */}
         <div
           className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-primary-200 rounded-lg overflow-hidden transition-colors flex">
 
