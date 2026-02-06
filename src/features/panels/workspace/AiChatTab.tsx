@@ -13,7 +13,7 @@ export function AiChatTab() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 초기 더미 데이터 (이미지와 똑같이 맞춤)
+  // 초기 더미 데이터
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -118,11 +118,10 @@ export function AiChatTab() {
 
       {/* 입력창 - 절대 위치로 하단 고정 */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-1 pb-4 background-200 to-transparent pt-6">
+        className="absolute bottom-0 left-0 right-0 px-1 pb-4 pt-6">
 
         <div
-          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-primary-200 rounded-lg overflow-hidden transition-colors flex">
-
+          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-lg overflow-hidden transition-colors flex focus-within:border-primary-200">
     <textarea
       value={input}
       onChange={(e) => setInput(e.target.value)}
@@ -132,8 +131,7 @@ export function AiChatTab() {
           handleSend();
         }
       }}
-      // 3. rows={3}: 기본적으로 3줄 정도의 높이를 가짐
-      // py-4: 위아래 여백을 넉넉하게 줘서 답답하지 않음
+
       className="w-full h-auto max-h-[200px] bg-transparent py-4 pl-4 pr-12 text-white text-sm resize-none outline-none placeholder:text-gray-500 overflow-y-auto custom-scrollbar leading-relaxed"
       placeholder="무엇이 궁금한가요?"
       rows={3}
