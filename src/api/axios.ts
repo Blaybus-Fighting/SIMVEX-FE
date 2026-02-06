@@ -6,11 +6,13 @@ import { triggerAuthErrorEvent } from '@/utils/authEvent';
 
 // 1. Axios 인스턴스 생성
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
+    'Authorization': 'Bearer ',
   },
+  withCredentials: true,
 });
 
 // 2. 요청 인터셉터 (API 요청을 보내기 전에 가로채서 토큰을 포함시킴)

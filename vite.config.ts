@@ -23,7 +23,6 @@ export default defineConfig(({mode}) => {
         '/api': {
           target: env.VITE_API_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''), // 프론트에서 /api/chat -> 백엔드로 /chat 요청 보냄
           secure: false,
         },
       },

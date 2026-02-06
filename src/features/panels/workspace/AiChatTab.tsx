@@ -1,69 +1,259 @@
 import { useEffect, useRef, useState } from "react";
 import ArrowUpIcon from "@/assets/icons/arrow_upward.svg?react";
 
-// 메시지 타입 정의
-type Message = {
-  id: number;
-  role: "user" | "ai";
-  text: string;
-};
+// API & Type
+import { getChatHistory } from "@/api/chatApi";
+import type { ChatMessageDto, StreamChunk } from "@/types/chat";
 
-export function AiChatTab() {
+// 화면 표시용 메시지 타입
+interface DisplayMessage extends ChatMessageDto {
+  id: number;
+}
+
+// props 정의
+interface AiChatTabProps {
+  sessionId: number; // 부모에게서 받는 세션 ID
+}
+
+export function AiChatTab({sessionId}: AiChatTabProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 초기 더미 데이터
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      role: "user",
-      text: "탄소강 (S45C / Carbon Steel) 에 대해서 자세히 알려줘. 어디에 쓰여?",
-    },
-    {
-      id: 2,
-      role: "ai",
-      text: "탄소강 (S45C / Carbon Steel) 은 기계 구조용 탄소강으로, 강도가 높고 열처리가 용이하여 다양한 기계 부품에 사용됩니다.\n\n주로 자동차 부품, 엔진 부품, 볼트, 너트, 그리고 기어와 같은 내구성이 필요한 곳에 쓰입니다.",
-    },
-    {
-      id: 3,
-      role: "user",
-      text: "만약, 알루미늄으로 한다면?",
-    },
-  ]);
+  // 메시지 목록
+  const [messages, setMessages] = useState<DisplayMessage[]>([]);
 
-  // 스크롤 자동 내리기
+  // 👇 [추가] 부드러운 출력을 위한 '임시 저장소(Buffer)'와 '타겟 ID'
+  const streamBufferRef = useRef("");
+  const streamingIdRef = useRef<number | null>(null);
+
+  // 👇 [추가] 강제 종료를 위한 컨트롤러
+  const abortControllerRef = useRef<AbortController | null>(null);
+  // 👇 [추가] "지금 사용자가 스크롤을 올려서 딴짓 중인가?" 감지하는 상태
+  const [userIsViewingHistory, setUserIsViewingHistory] = useState(false);
+
+  // 1. 초기 채팅 내역 불러오기
+  useEffect(() => {
+    const loadAllChatHistory = async () => {
+      try {
+        let currentPage = 0;
+        let isLastPage = false;
+        let allMessages: ChatMessageDto[] = []; // 여기에 모든 메시지를 모음
+
+        // 👇 [핵심] 마지막 페이지(last: true)가 될 때까지 무한 반복
+        while (!isLastPage) {
+          console.log(`${currentPage}번 페이지 불러오는 중...`);
+
+          const response = await getChatHistory(sessionId, currentPage);
+
+          if (response.isSuccess && response.data) {
+            // 가져온 10개를 바구니(allMessages)에 담기
+            // (만약 최신순 정렬이라 역순으로 쌓아야 한다면 ...response.data.content, ...allMessages 로 순서 변경)
+            allMessages = [...allMessages, ...response.data.content];
+
+            // "이제 끝인가요?" 확인 (last가 true면 반복문 종료)
+            isLastPage = response.data.last;
+
+            // 다음 페이지 준비
+            currentPage++;
+          } else {
+            // 실패하면 강제 종료 (무한루프 방지)
+            break;
+          }
+        }
+
+        // 다 모은 뒤에 한 번에 화면에 뿌리기!
+        const history = allMessages.map((msg, index) => ({
+          ...msg,
+          id: index, // 전체 리스트 기준으로 ID 재부여
+        }));
+
+        setMessages(history);
+        console.log(`총 ${history.length}개의 메시지 로딩 완료!`);
+
+      } catch (error) {
+        console.error("채팅 내역 로딩 실패:", error);
+      }
+    };
+
+    loadAllChatHistory();
+  }, [sessionId]);
+
+  // 2. 타자기 애니메이션 루프
+  // 백엔드에서 데이터가 뭉텅이로 와도, 여기서 0.02초마다 한 글자씩 화면에 옮겨줍니다.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 스트리밍 중인 메시지가 없으면 아무것도 안 함
+      if (streamingIdRef.current === null) return;
+
+      const targetText = streamBufferRef.current;
+
+      setMessages((prev) => prev.map((msg) => {
+        // 지금 작성 중인 AI 메시지가 아니면 건드리지 않음
+        if (msg.id !== streamingIdRef.current) return msg;
+
+        // 현재 화면에 표시된 길이 vs 실제 도착한 길이
+        const currentLen = msg.message.length;
+        const targetLen = targetText.length;
+
+        // 이미 다 그렸으면 패스
+        if (currentLen >= targetLen) return msg;
+
+        // 💡 남은 글자가 너무 많으면(10글자 이상 밀림) 조금 더 빨리 출력 (속도 조절)
+        // 평소엔 1글자씩, 밀리면 3글자씩 추가
+        const charsToAdd = targetLen - currentLen > 10 ? 3 : 1;
+
+        return {
+          ...msg,
+          message: targetText.slice(0, currentLen + charsToAdd)
+        };
+      }));
+
+    }, 30); // 0.03초마다 실행 (숫자를 줄이면 더 빨라짐)
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // 👇 [추가] 중지 버튼 눌렀을 때 실행할 함수
+  const handleStop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort(); // 1. 네트워크 요청 강제 취소
+      abortControllerRef.current = null;
+      setIsLoading(false); // 2. 로딩 상태 끄기 (입력창 잠금 해제)
+      streamingIdRef.current = null; // 3. 타자기 효과 중단
+    }
+  };
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+
+    const {scrollTop, scrollHeight, clientHeight} = scrollRef.current;
+
+    // 바닥까지의 남은 거리 계산
+    const distFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // 만약 바닥에서 1px 이상 올라가 있으면 -> "아, 옛날 내역 보는 중이구나!" (자동 스크롤 끔)
+    // 바닥에 거의 붙어 있으면 -> "새 메시지 구경 중이구나!" (자동 스크롤 켬)
+    if (distFromBottom > 1) {
+      setUserIsViewingHistory(true);
+    } else {
+      setUserIsViewingHistory(false);
+    }
+  };
+
+  // 2. 스크롤 자동 내리기 (수정됨 ⭐)
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      // 🚨 "딴짓 중(userIsViewingHistory)"이 아닐 때만 스크롤을 내립니다!
+      if (!userIsViewingHistory) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, userIsViewingHistory]); // 의존성 배열 유지
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  // 3. 메시지 전송 및 스트리밍 처리
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
 
-    // 1. 내 메시지 추가
-    const newMessage: Message = {
+    const userMsg: DisplayMessage = {
       id: Date.now(),
-      role: "user",
-      text: input,
+      chatRole: "USER",
+      message: input,
+      timestamp: new Date().toISOString(),
     };
-    setMessages((prev) => [...prev, newMessage]);
-    setInput("");
+
+    // AI 빈 말풍선 생성
+    const aiMsgId = Date.now() + 1;
+    const aiPlaceholder: DisplayMessage = {
+      id: aiMsgId,
+      chatRole: "ASSISTANT",
+      message: "", // 빈 상태로 시작
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, userMsg, aiPlaceholder]);
+
+    // 👇 [중요] 내가 메시지를 보내면 무조건 바닥으로 강제 이동시켜야 함
+    setUserIsViewingHistory(false);
+
+    // 👇 [설정] 스트리밍 시작 준비
+    streamBufferRef.current = "";    // 버퍼 비우기
+    streamingIdRef.current = aiMsgId; // "이제 이 ID에다가 글자 채워넣어라"고 알림
+
+    const currentInput = input;
+    setInput("")
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setIsLoading(true);
 
-    // 2. (임시) 2초 뒤에 AI 답변 추가 시뮬레이션
-    setTimeout(() => {
-      setIsLoading(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          role: "ai",
-          text: "알루미늄은 탄소강보다 가볍지만 강도는 낮습니다. 경량화가 중요한 항공기 부품 등에 주로 쓰입니다.",
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat/stream`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ",
         },
-      ]);
-    }, 2000);
+        body: JSON.stringify({
+          question: currentInput,
+          sessionId: sessionId,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.body) throw new Error("ReadableStream not supported");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let buffer = "";
+
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, {stream: true});
+        buffer += chunk;
+
+        const parts = buffer.split("\n\n");
+        buffer = parts.pop() || "";
+
+        for (const part of parts) {
+          const lines = part.split("\n");
+          for (const line of lines) {
+            if (line.startsWith("data:")) {
+              try {
+                const jsonStr = line.replace("data:", "").trim();
+                const data: StreamChunk = JSON.parse(jsonStr);
+
+                if (data.type === "chunk") {
+                  //화면(setMessages)을 바로 건드리지 않고
+                  // 'streamBufferRef'에만 몰래 쌓아둡니다.
+                  // 화면 업데이트는 위의 useEffect가 알아서 해줍니다.
+                  streamBufferRef.current += data.message;
+                } else if (data.type === "done") {
+                  // 완료되어도 로딩만 끄고, 글자는 다 찍힐 때까지 둠
+                  setIsLoading(false);
+                }
+              } catch (e) {
+                console.error("JSON 파싱 에러:", e);
+              }
+            }
+          }
+        }
+      }
+
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log("사용자가 전송을 중단했습니다.");
+      } else {
+        console.error("스트리밍 에러:", error);
+        // 에러 메시지 표시 로직...
+      }
+    } finally {
+      setIsLoading(false);
+      abortControllerRef.current = null; // 청소
+    }
   };
 
   return (
@@ -71,48 +261,42 @@ export function AiChatTab() {
       {/* 스크롤 영역 */}
       <div
         ref={scrollRef}
+        onScroll={handleScroll}
         className="flex-1 overflow-y-auto custom-scrollbar"
       >
         <div className="space-y-4 pb-[200px]">
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex w-full ${msg.chatRole === "USER" ? "justify-end" : "justify-start"}`}
             >
               <div className="flex max-w-[90%] gap-2">
-                {/* AI 아이콘 (AI일 때만 보임) */}
-                {msg.role === "ai" && (
+                {/* AI 아이콘 */}
+                {msg.chatRole === "ASSISTANT" && (
                   <div className="w-8 h-8 rounded-md bg-[#4B5563] shrink-0 flex items-center justify-center mt-1">
+                    {/* 로고 아이콘 */}
+                    <div className="w-4 h-4 bg-[#9CA3AF] rounded-sm opacity-50"/>
                   </div>
                 )}
 
                 {/* 말풍선 */}
                 <div
                   className={`p-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                    msg.role === "user"
+                    msg.chatRole === "USER"
                       ? "bg-background-100 text-gray-100 rounded-tr-sm"
                       : "bg-background-200 text-gray-100 rounded-tl-sm"
                   }`}
                 >
-                  {msg.text}
+                  {/* 스트리밍 중일 때 메시지가 비어있으면 로딩 표시 */}
+                  {msg.chatRole === "ASSISTANT" && msg.message === "" && isLoading ? (
+                    <span className="animate-pulse">...</span>
+                  ) : (
+                    msg.message
+                  )}
                 </div>
               </div>
             </div>
           ))}
-
-          {/* 로딩 상태 ("생각중..." 말풍선) */}
-          {isLoading && (
-            <div className="flex w-full justify-start animate-pulse">
-              <div className="flex max-w-[80%] gap-2">
-                <div className="w-8 h-8 rounded-md bg-background-100 shrink-0 flex items-center justify-center mt-1">
-                </div>
-                <div
-                  className="p-3 rounded-2xl bg-background-200 text-gray-300 text-sm rounded-tl-sm flex items-center">
-                  생각중...
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -125,10 +309,12 @@ export function AiChatTab() {
     <textarea
       value={input}
       onChange={(e) => setInput(e.target.value)}
+      // 👇 로딩 중일 때 엔터 막기
       onKeyDown={(e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          handleSend();
+          // 로딩 중이 아닐 때만 전송
+          if (!isLoading) handleSend();
         }
       }}
 
@@ -136,15 +322,27 @@ export function AiChatTab() {
       placeholder="무엇이 궁금한가요?"
       rows={3}
     />
-
-          {/* 전송 버튼 (우측 하단 고정) */}
-          <button
-            onClick={handleSend}
-            disabled={!input.trim()}
-            className="absolute bottom-3 right-3 w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-          >
-            <ArrowUpIcon className="w-4 h-4 text-white"/>
-          </button>
+          {/* 👇 전송/중지 버튼 스위칭 로직 */}
+          {isLoading ? (
+            // [로딩 중일 때] -> 중지 버튼 (검정 네모)
+            <button
+              onClick={handleStop}
+              className="absolute bottom-3 right-3 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg z-10"
+              title="답변 중지"
+            >
+              {/* 아이콘 없으면 그냥 div 네모로 대체 */}
+              <div className="w-3 h-3 bg-white rounded-sm"/>
+            </button>
+          ) : (
+            // [평소] -> 전송 버튼 (화살표)
+            <button
+              onClick={handleSend}
+              disabled={!input.trim()}
+              className="absolute bottom-3 right-3 w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center ..."
+            >
+              <ArrowUpIcon className="w-4 h-4 text-white"/>
+            </button>
+          )}
         </div>
       </div>
     </div>
