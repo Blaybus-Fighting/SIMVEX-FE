@@ -1,0 +1,5 @@
+// 백엔드 서버와의 HTTP 통신을 담당하는 '순수 데이터 요청 계층(Communication Layer)'
+// 1. Axios 인스턴스 설정(axios.ts)과 API 엔드포인트 호출 함수들을 관리합니다. (예: api/auth.ts, api/note.ts)
+// 3. React Hooks(useQuery 등)나 UI 상태 관리는 포함하지 않으며, 오직 서버와 데이터를 주고받는 '순수 비동기 함수(Promise)'만 작성합니다.
+// 2. 컴포넌트 내부에서 axios.get()을 직접 사용하지 말고, 이곳에 정의된 함수를 import 하여 사용해주세요.
+// 4. 이곳에선 api 엔드포인트 "정의"만, 각 features 폴더에선 "호출"만 담당합니다.

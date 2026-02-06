@@ -1,0 +1,340 @@
+/* ======================================================
+   전체 가로 레이아웃
+====================================================== */
+.workspace-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+/* ======================================================
+   ① 3D 영역
+====================================================== */
+.viewer-area {
+  flex: 1.6 1 0;
+  min-width: 0;            /* 🔥 핵심 */
+  height: 100%;
+  background: #0f172a;
+}
+
+/* ======================================================
+   ② 기계 / 부품 영역
+====================================================== */
+.machine-area {
+  flex: 1 1 0;             /* 🔥 basis 0 */
+  min-width: 0;            /* 🔥 핵심 */
+  height: 100%;
+  padding: 16px;
+  background: #0f172a;
+  box-sizing: border-box;
+}
+
+.machine-panel {
+  width: 100%;
+  min-width: 0;            /* 🔥 핵심 */
+  height: 100%;
+  background: #1f2430;
+  border-radius: 16px;
+  padding: 28px;
+  overflow-y: auto;
+  overflow-x: visible;   /* 🔥 이 줄 추가 */
+  box-sizing: border-box;
+}
+
+
+
+/* ======================================================
+   ③ AI 영역
+====================================================== */
+.ai-area {
+  flex: 1 1 0;
+  min-width: 0;            /* 🔥 핵심 */
+  height: 100%;
+  padding: 16px;
+  background: #0f172a;
+  box-sizing: border-box;
+}
+
+/* ======================================================
+   탭 바
+====================================================== */
+.machine-header {
+  margin-bottom: 36px;
+}
+
+.machine-tab-bar {
+  display: flex;
+  height: 52px;
+  background: #2b3140;
+  border-radius: 14px;
+  padding: 4px;
+}
+
+.machine-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.machine-tab.active {
+  background: #3b5bdb;
+  color: #ffffff;
+}
+
+/* ======================================================
+   AI 요약
+====================================================== */
+.ai-card {
+  background: #2a2f3a;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 48px;
+}
+
+.ai-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c7d2fe;
+  margin-bottom: 16px;
+}
+
+.ai-inner-card {
+  background: #1f2430;
+  border-radius: 12px;
+  padding: 22px;
+  min-height: 120px;
+  font-size: 14px;
+  color: #e5e7eb;
+  line-height: 1.7;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ======================================================
+   섹션 공통
+====================================================== */
+.usage-section,
+.theory-section,
+.part-section {
+  margin-bottom: 52px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #f9fafb;
+}
+
+.usage-text,
+.section-body {
+  font-size: 16px;
+  color: #d1d5db;
+  line-height: 1.8;
+  max-height: 3.6em;
+  overflow: hidden;
+}
+
+.usage-text.open,
+.section-body.open {
+  max-height: none;
+}
+
+/* ======================================================
+   펼치기
+====================================================== */
+.section-toggle {
+  display: block;
+  margin: 16px auto 20px;
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+/* ======================================================
+   마감선
+====================================================== */
+.section-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.14);
+}
+
+/* ======================================================
+   🔥 가로 스크롤 카드 (문제 해결 핵심)
+====================================================== */
+.part-image-strip {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.part-image-item {
+  min-width: 180px;
+  height: 110px;
+  background: #2a2f3a;
+  border-radius: 14px;
+  padding: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.part-image-item.active {
+  border: 2px solid #3b5bdb;
+}
+
+/* ===============================
+   🔥 전체 내용 왼쪽 정렬 강제
+=============================== */
+.machine-panel,
+.machine-panel * {
+  text-align: left;
+}
+
+/* ===============================
+   🔥 탭 바 글씨 가운데 정렬 복구
+=============================== */
+.machine-tab-bar,
+.machine-tab {
+  text-align: center;
+}
+
+/* 🔥 패널 열고/닫기 버튼 (정위치) */
+.panel-toggle-btn {
+  position: absolute;
+
+  /* 🔥 패널 기준 위치 */
+  top: 160px;          /* ← 여기서 위아래 미세조정 */
+  right: -18px;        /* 패널 밖으로 살짝 */
+
+  width: 20px;
+  height: 56px;
+
+  background: #2b3140;
+  border: none;
+  border-radius: 6px 0 0 6px;
+
+  color: #9ca3af;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 50;
+}
+
+.panel-toggle-btn:hover {
+  background: #3b4252;
+}
+
+/* machine-panel이 버튼 기준점 */
+.machine-panel {
+  position: relative;
+}
+
+/* 🔥 패널에 붙은 닫기 버튼 */
+.panel-close-btn {
+  position: absolute;
+  top: 20px;
+  right: -14px;          /* 패널 밖으로 살짝 */
+
+  width: 28px;
+  height: 28px;
+
+  background: #2b3140;
+  border: none;
+  border-radius: 6px 0 0 6px;
+
+  color: #e5e7eb;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  z-index: 50;
+}
+
+.panel-close-btn:hover {
+  background: #3b4252;
+}
+
+/* ======================================================
+   🔥 패널 열기 버튼 (닫혔을 때만)
+====================================================== */
+.panel-open-btn {
+  position: fixed;
+  top: 96px;              /* 오른쪽 위 */
+  right: 16px;
+
+  width: 28px;
+  height: 28px;
+
+  background: #2b3140;
+  border: none;
+  border-radius: 6px;
+
+  color: #e5e7eb;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.panel-open-btn:hover {
+  background: #3b4252;
+}
+/* ===============================
+   재질 변경해보기 섹션 이미지 영역
+=============================== */
+.part-image-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;  /* 가로 스크롤 가능 */
+}
+
+.part-image-item {
+  min-width: 120px;   /* 각 이미지를 작은 크기로 보이게 설정 */
+  height: 120px;      /* 크기 통일 */
+  background: #2a2f3a;
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.part-image-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.part-image-item.active {
+  border: 2px solid #3b5bdb;
+}
+
+/* ===============================
+   섹션 제목 및 본문 간격 및 스타일
+=============================== */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #f9fafb;
+}
+
+.section-body {
+  font-size: 16px;
+  color: #d1d5db;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
