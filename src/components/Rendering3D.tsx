@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Dropdown from "./ui/DropdownBtn";
 import PartsDropdown from "./ui/PartsDropdownBtn";
 import { ResolutionSlider } from "./ui/ResolutionSlider";
+import ExplodeViewer from "@/features/viewer/components/ExplodeViewer";
 
 export type Part = {
   id: string;
@@ -38,6 +39,12 @@ export default function Rendering3D({
 }: Rendering3DProps) {
   const parts = PARTS_BY_PAGE[pageKey]; // pageKey로 parts 선택
 
+  // 분해도 0~100
+  const [explodePct, setExplodePct] = useState(0);
+
+  // 내부에서만 0~1로 변환
+  const explode = explodePct / 100;
+
   // 부품 클릭 로직
   const handlePartClick = useCallback(
     (part: Part) => {
@@ -59,7 +66,7 @@ export default function Rendering3D({
 
   return (
     // 이 컴포넌트에 있는 페이지에도 h-full 적용해야 함
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col h-full">
       {/* 배경색, 조명, 구성 부품 버튼 섹션 */}
       <section className="flex justify-between items-end">
         <div className="flex gap-3">
@@ -82,9 +89,9 @@ export default function Rendering3D({
         <PartsDropdown parts={partsForDropDown} />
       </section>
 
-      {/* 3D 부품(✅ TODO: 3D 부품 구현할 때 진행) */}
-      <div className="border border-white w-[663px] h-[554px] ml-[6.188rem]">
-        3D 렌더링 자리
+      {/* 3D 부품 */}
+      <div className=" w-[900px] h-full">
+        <ExplodeViewer explode={explode} url="/models/Robot Glipper.glb" />
       </div>
 
       {/* Q&A 버튼과 분해도 조절 슬라이드 */}
@@ -98,7 +105,7 @@ export default function Rendering3D({
           <div className="border border-white w-20 h-20" />
 
           {/* 분해 조립도 슬라이더 */}
-          <ResolutionSlider />
+          <ResolutionSlider value={explodePct} onChange={setExplodePct} />
         </div>
       </section>
     </div>
