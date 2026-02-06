@@ -23,13 +23,13 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
   // 메시지 목록
   const [messages, setMessages] = useState<DisplayMessage[]>([]);
 
-  // 👇 [추가] 부드러운 출력을 위한 '임시 저장소(Buffer)'와 '타겟 ID'
+  // 부드러운 출력을 위한 '임시 저장소(Buffer)'와 '타겟 ID'
   const streamBufferRef = useRef("");
   const streamingIdRef = useRef<number | null>(null);
 
-  // 👇 [추가] 강제 종료를 위한 컨트롤러
+  // 강제 종료를 위한 컨트롤러
   const abortControllerRef = useRef<AbortController | null>(null);
-  // 👇 [추가] "지금 사용자가 스크롤을 올려서 딴짓 중인가?" 감지하는 상태
+  // "사용자가 스크롤을 올리는가?"를 감지하는 상태
   const [userIsViewingHistory, setUserIsViewingHistory] = useState(false);
 
   // 1. 초기 채팅 내역 불러오기
@@ -40,18 +40,17 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
         let isLastPage = false;
         let allMessages: ChatMessageDto[] = []; // 여기에 모든 메시지를 모음
 
-        // 👇 [핵심] 마지막 페이지(last: true)가 될 때까지 무한 반복
+        // 마지막 페이지(last: true)가 될 때까지 무한 반복
         while (!isLastPage) {
           console.log(`${currentPage}번 페이지 불러오는 중...`);
 
           const response = await getChatHistory(sessionId, currentPage);
 
           if (response.isSuccess && response.data) {
-            // 가져온 10개를 바구니(allMessages)에 담기
-            // (만약 최신순 정렬이라 역순으로 쌓아야 한다면 ...response.data.content, ...allMessages 로 순서 변경)
+            // 가져온 일부 채팅을 allMessages에 담기
             allMessages = [...allMessages, ...response.data.content];
 
-            // "이제 끝인가요?" 확인 (last가 true면 반복문 종료)
+            // last가 true면 반복문 종료
             isLastPage = response.data.last;
 
             // 다음 페이지 준비
@@ -80,7 +79,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
   }, [sessionId]);
 
   // 2. 타자기 애니메이션 루프
-  // 백엔드에서 데이터가 뭉텅이로 와도, 여기서 0.02초마다 한 글자씩 화면에 옮겨줍니다.
+  // 백엔드에서 데이터가 뭉텅이로 와도, 여기서 0.02초마다 한 글자씩 화면에 옮겨줌
   useEffect(() => {
     const interval = setInterval(() => {
       // 스트리밍 중인 메시지가 없으면 아무것도 안 함
@@ -99,7 +98,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
         // 이미 다 그렸으면 패스
         if (currentLen >= targetLen) return msg;
 
-        // 💡 남은 글자가 너무 많으면(10글자 이상 밀림) 조금 더 빨리 출력 (속도 조절)
+        // 남은 글자가 너무 많으면(10글자 이상 밀림) 조금 더 빨리 출력 (속도 조절)
         // 평소엔 1글자씩, 밀리면 3글자씩 추가
         const charsToAdd = targetLen - currentLen > 10 ? 3 : 1;
 
@@ -114,7 +113,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // 👇 [추가] 중지 버튼 눌렀을 때 실행할 함수
+  // 중지 버튼 눌렀을 때 실행할 함수
   const handleStop = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort(); // 1. 네트워크 요청 강제 취소
@@ -132,19 +131,19 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
     // 바닥까지의 남은 거리 계산
     const distFromBottom = scrollHeight - scrollTop - clientHeight;
 
-    // 만약 바닥에서 1px 이상 올라가 있으면 -> "아, 옛날 내역 보는 중이구나!" (자동 스크롤 끔)
+    // 만약 바닥에서 2px 이상 올라가 있으면 -> "아, 옛날 내역 보는 중이구나!" (자동 스크롤 끔)
     // 바닥에 거의 붙어 있으면 -> "새 메시지 구경 중이구나!" (자동 스크롤 켬)
-    if (distFromBottom > 1) {
+    if (distFromBottom > 2) {
       setUserIsViewingHistory(true);
     } else {
       setUserIsViewingHistory(false);
     }
   };
 
-  // 2. 스크롤 자동 내리기 (수정됨 ⭐)
+  // 2. 스크롤 자동 내리기
   useEffect(() => {
     if (scrollRef.current) {
-      // 🚨 "딴짓 중(userIsViewingHistory)"이 아닐 때만 스크롤을 내립니다!
+      // "딴짓 중(userIsViewingHistory)"이 아닐 때만 스크롤을 내립니다!
       if (!userIsViewingHistory) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
@@ -173,10 +172,10 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
 
     setMessages((prev) => [...prev, userMsg, aiPlaceholder]);
 
-    // 👇 [중요] 내가 메시지를 보내면 무조건 바닥으로 강제 이동시켜야 함
+    // 내가 메시지를 보내면 무조건 바닥으로 강제 이동시켜야 함
     setUserIsViewingHistory(false);
 
-    // 👇 [설정] 스트리밍 시작 준비
+    // 스트리밍 시작 준비
     streamBufferRef.current = "";    // 버퍼 비우기
     streamingIdRef.current = aiMsgId; // "이제 이 ID에다가 글자 채워넣어라"고 알림
 
@@ -228,7 +227,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
 
                 if (data.type === "chunk") {
                   //화면(setMessages)을 바로 건드리지 않고
-                  // 'streamBufferRef'에만 몰래 쌓아둡니다.
+                  // 'streamBufferRef'에만 안보이게 쌓아둡니다.
                   // 화면 업데이트는 위의 useEffect가 알아서 해줍니다.
                   streamBufferRef.current += data.message;
                 } else if (data.type === "done") {
@@ -309,7 +308,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
     <textarea
       value={input}
       onChange={(e) => setInput(e.target.value)}
-      // 👇 로딩 중일 때 엔터 막기
+      // 로딩 중일 때 엔터 막기
       onKeyDown={(e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
@@ -322,9 +321,9 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
       placeholder="무엇이 궁금한가요?"
       rows={3}
     />
-          {/* 👇 전송/중지 버튼 스위칭 로직 */}
+          {/* 전송/중지 버튼 스위칭 로직 */}
           {isLoading ? (
-            // [로딩 중일 때] -> 중지 버튼 (검정 네모)
+            // [로딩 중일 때] -> 중지 버튼
             <button
               onClick={handleStop}
               className="absolute bottom-3 right-3 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg z-10"
