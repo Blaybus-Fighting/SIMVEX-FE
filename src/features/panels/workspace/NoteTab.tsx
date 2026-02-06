@@ -29,7 +29,7 @@ export function NoteTab() {
           placeholder="내용을 입력하세요"/>
 
         <button
-          className="mt-4 bg-primary-100 text-white py-3 rounded-lg font-bold hover:bg-primary-200 transition-colors">
+          className="mt-4 bg-primary-200 text-white py-3 rounded-lg font-bold hover:bg-primary-100 transition-colors">
           저장하기
         </button>
       </div>
