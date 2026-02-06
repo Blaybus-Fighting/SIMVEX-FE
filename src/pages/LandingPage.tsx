@@ -14,9 +14,9 @@ export default function LandingPage() {
         </h3>
         {/* 바로 학습하기 버튼 */}
         <button className="flex items-center justify-center w-[11.875rem] bg-primary-200 gap-1 py-[0.813rem] rounded-lg mt-11">
-          <a className="text-gray-100 text-text-1 font-semibold">
+          <p className="text-gray-100 text-text-1 font-semibold">
             바로 학습하기
-          </a>
+          </p>
           <ArrowDownWard />
         </button>
       </div>
