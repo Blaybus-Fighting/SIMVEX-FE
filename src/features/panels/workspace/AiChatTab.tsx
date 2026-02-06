@@ -123,7 +123,7 @@ export function AiChatTab() {
         {/* 1. min-h-[80px]: 너무 얇지 않게, 적당한 두께감 확보 */}
         {/* 2. items-end 제거: 텍스트가 위에서부터 자연스럽게 채워짐 */}
         <div
-          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-white/10 rounded-3xl overflow-hidden transition-colors flex">
+          className="relative w-full min-h-[80px] max-h-[200px] bg-background-100 border border-primary-200 rounded-lg overflow-hidden transition-colors flex">
 
     <textarea
       value={input}
