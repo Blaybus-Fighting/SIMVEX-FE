@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Home from "@/pages/HomePage";
 import { AUTH_EVENT_NAME } from "@/utils/authEvent";
 import "./App.css";
 import Test from "@pages/TestPage";
 import StudyPage from "@pages/StudyPage.tsx";
+import LandingPage from "@/pages/LandingPage";
 
 function App() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const handleUnauthorized = () => {
       console.log("세션 만료됨! 로그인 페이지로 이동 예정");
-      navigate("/login", {replace: true});
+      navigate("/login", { replace: true });
     };
 
     window.addEventListener(AUTH_EVENT_NAME, handleUnauthorized);
@@ -21,14 +21,13 @@ function App() {
     };
   }, [navigate]);
 
-
   return (
     <div className="h-full">
+      {/* <Header /> */}
       <Routes>
-        {/* 라우팅 설정을 위해 임시로 만들어놓은 페이지 */}
-        <Route path="/" element={<Home/>}/>
-        <Route path="/test" element={<Test/>}/>
-        <Route path="/study" element={<StudyPage/>}/>
+        <Route path="/home" element={<LandingPage />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/study" element={<StudyPage />} />
       </Routes>
     </div>
   );
