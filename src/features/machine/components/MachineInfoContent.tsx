@@ -13,7 +13,7 @@ interface Props {
 export default function MachineInfoPanel({
   activeTab,
   selectedPart,
-  onPartSelect
+  onPartSelect,
 }: Props) {
   return (
     <>
