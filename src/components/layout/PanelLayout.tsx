@@ -9,27 +9,25 @@ interface PanelLayoutProps {
   className?: string;
 }
 
-export function PanelLayout({ header, children, className }: PanelLayoutProps) {
+export function PanelLayout({header, children, className}: PanelLayoutProps) {
   return (
-    <div
-      className={cn(
-        "flex flex-col h-full w-full",
-        "bg-background-400",
-        "border border-background-100",
-        "rounded-xl",
-        "p-4",
-        className,
-      )}
-    >
+    <div className={cn(
+      "flex flex-col h-full w-full", "bg-background-400", "border border-background-100", "rounded-xl", "p-4", className)}>
+
       {/* 1. 헤더 영역 (탭 스위처 자리) */}
       {/* mb-4: 본문 박스와의 간격 */}
-      {header && <div className="mb-4 shrink-0">{header}</div>}
+      {header && (
+        <div className="mb-4 shrink-0">
+          {header}
+        </div>
+      )}
 
       {/* 2. 본문 영역 (회색 박스) */}
       {/* overflow-hidden: 내용이 많아도 박스 밖으로 안 튀어나오게 */}
       <div className="flex-1 overflow-hidden relative flex flex-col">
         {children}
       </div>
+
     </div>
   );
 }
