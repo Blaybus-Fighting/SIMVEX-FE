@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { AUTH_EVENT_NAME } from "@/utils/authEvent";
 import "./App.css";
-import Test from "@pages/TestPage";
 import StudyPage from "@pages/StudyPage.tsx";
 import LandingPage from "@/pages/LandingPage";
 
@@ -26,7 +25,7 @@ function App() {
       {/* <Header /> */}
       <Routes>
         <Route path="/home" element={<LandingPage />} />
-        <Route path="/test" element={<Test />} />
+        {/* <Route path="/test" element={<Test />} /> */}
         <Route path="/study" element={<StudyPage />} />
       </Routes>
     </div>
