@@ -21,7 +21,7 @@ export default function MachineInfoPanel({
       {/* 탭에 따른 콘텐츠만 렌더링 */}
       {activeTab === "machine" && <MachineContent />}
       {activeTab === "part" && (
-        <PartContent selectedPart={selectedPart} />
+        <PartContent selectedPart={null} />
       )}
     </>
   );

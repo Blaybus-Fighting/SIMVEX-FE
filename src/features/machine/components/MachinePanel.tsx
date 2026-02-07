@@ -10,7 +10,7 @@ export default function MachinePanel() {
   const [activeTab, setActiveTab] = useState<"LEFT" | "RIGHT">("LEFT");
 
   // ✅ 추가 1: 선택된 부품 상태 (일단 string | null)
-  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+  const [selectedPart] = useState<string | null>(null);
 
   return (
     <PanelLayout
