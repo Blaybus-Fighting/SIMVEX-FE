@@ -83,13 +83,13 @@ type PartKey =
   | "Base_Gear"
   | "Glipper_2";
 
-export function RobotGlipper({
+export function RobotGripper({
   explode = 0,
   selectedPart,
   ...props
 }: ModelProps) {
   const { nodes, materials } = useGLTF(
-    "/models/Robot Glipper.glb",
+    "/models/Robot Gripper.glb",
   ) as unknown as GLTFResult;
 
   const ghostMaterial = useMemo(
@@ -494,4 +494,4 @@ export function RobotGlipper({
   );
 }
 
-useGLTF.preload("/models/Robot Glipper.glb");
+useGLTF.preload("/models/Robot Gripper.glb");
