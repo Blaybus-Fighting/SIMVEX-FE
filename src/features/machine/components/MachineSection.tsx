@@ -23,7 +23,7 @@ export default function MachineSection({
         className="section-toggle"
         onClick={() => setExpanded(!expanded)}
       >
-        펼치기 {expanded ? "▲" : "▼"}
+        {expanded ? "접기 ▲" : "펼치기 ▼"}
       </button>
     </div>
   );
