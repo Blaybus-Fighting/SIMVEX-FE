@@ -33,11 +33,10 @@ type ModelProps = ThreeElements["group"] & {
 export function Suspension({
   explode = 0,
   selectedPart = null,
+  url = "/models/Suspension.glb",
   ...props
-}: ModelProps) {
-  const { nodes, materials } = useGLTF(
-    "/models/Suspension.glb",
-  ) as unknown as GLTFResult;
+}: ModelProps & { url?: string }) {
+  const { nodes, materials } = useGLTF(url) as unknown as GLTFResult;
 
   /** 선택 안 된 파트들에 적용할 고스트 머티리얼 */
   const ghostMaterial = useMemo(

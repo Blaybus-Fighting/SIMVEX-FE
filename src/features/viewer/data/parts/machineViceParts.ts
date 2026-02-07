@@ -76,7 +76,7 @@ export const machineViceParts: MachineVicePart[] = [
   },
   {
     id: "Part4_spindelsockel",
-    label: "PArt4",
+    label: "Part4",
     category: "housing",
     // imgSrc: Part4SpindelsockelImg,
   },

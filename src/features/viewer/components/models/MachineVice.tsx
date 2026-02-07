@@ -212,12 +212,11 @@ function brassTexture() {
 
 export function MachineVice({
   explode = 0,
-  selectedPart,
+  selectedPart = null,
+  url = "/models/Machine Vice.glb",
   ...props
-}: ModelProps) {
-  const { nodes } = useGLTF(
-    "/models/Machine Vice.glb",
-  ) as unknown as GLTFResult;
+}: ModelProps & { url?: string }) {
+  const { nodes } = useGLTF(url) as unknown as GLTFResult;
 
   /** 선택 판정 (묶음 규칙 포함) */
   const isSelected = (key: PartKey) => {

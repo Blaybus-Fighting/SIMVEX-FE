@@ -85,12 +85,11 @@ type PartKey =
 
 export function RobotGripper({
   explode = 0,
-  selectedPart,
+  selectedPart = null,
+  url = "/models/Robot Gripper.glb",
   ...props
-}: ModelProps) {
-  const { nodes, materials } = useGLTF(
-    "/models/Robot Gripper.glb",
-  ) as unknown as GLTFResult;
+}: ModelProps & { url?: string }) {
+  const { nodes, materials } = useGLTF(url) as unknown as GLTFResult;
 
   const ghostMaterial = useMemo(
     () =>
@@ -269,7 +268,7 @@ export function RobotGripper({
           receiveShadow
           geometry={nodes.Pin_7.geometry}
           material={
-            isSelected("Pin_9")
+            isSelected("Pin_7")
               ? materials["ChromePolished.013"]
               : ghostMaterial
           }
@@ -283,7 +282,7 @@ export function RobotGripper({
           receiveShadow
           geometry={nodes.Pin_6.geometry}
           material={
-            isSelected("Pin_9")
+            isSelected("Pin_6")
               ? materials["ChromePolished.015"]
               : ghostMaterial
           }

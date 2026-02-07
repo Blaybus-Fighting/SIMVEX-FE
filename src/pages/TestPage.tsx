@@ -12,19 +12,19 @@ export default function TestPage() {
 
   /** 🔥 3D 부품 클릭 시 */
   const handlePartClick = (part: Part) => {
-    setSelectedPart(part.id);   // 어떤 부품인지 저장
-    setActiveTab("part");       // 👉 자동으로 부품 탭 전환
+    setSelectedPart(part.id); // 어떤 부품인지 저장
+    setActiveTab("part"); // 👉 자동으로 부품 탭 전환
   };
 
   return (
     <div className="workspace-layout">
       {/* ===== ① 3D 영역 ===== */}
-      <div className="viewer-area">
+      {/* <div className="viewer-area">
         <Rendering3D
           pageKey="pageA"
           onPartClick={handlePartClick}
         />
-      </div>
+      </div> */}
 
       {/* ===== ② 기계 / 부품 패널 ===== */}
       <div className="machine-area">

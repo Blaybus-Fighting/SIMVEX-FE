@@ -41,7 +41,7 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
 
   // 받아오는 모델명에 따라 받는 glb를 다르게 분기
   const modelUrlMap: Record<string, string> = {
-    "Robot Gripper": "/models/Robot Glipper.glb",
+    "Robot Gripper": "/models/Robot Gripper.glb",
     Suspension: "/models/Suspension.glb",
     "Machine Vice": "/models/MachineVice.glb",
   };
