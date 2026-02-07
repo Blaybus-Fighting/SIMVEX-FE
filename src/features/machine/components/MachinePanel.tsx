@@ -9,6 +9,9 @@ import PartContent from "@/features/machine/components/PartContent";
 export default function MachinePanel() {
   const [activeTab, setActiveTab] = useState<"LEFT" | "RIGHT">("LEFT");
 
+  // ✅ 추가 1: 선택된 부품 상태 (일단 string | null)
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+
   return (
     <PanelLayout
       header={
@@ -22,13 +25,15 @@ export default function MachinePanel() {
     >
       <div className="machine-panel">
         {/* 🔥 AI 요약은 항상 맨 위 */}
-        <AiSummaryCard selectedPart={null} />
+        {/* ✅ 변경 2: null → selectedPart */}
+        <AiSummaryCard selectedPart={selectedPart} />
 
         {/* 🔥 탭에 따라 내용만 변경 */}
         {activeTab === "LEFT" ? (
           <MachineContent />
         ) : (
-          <PartContent selectedPart={null} />
+          // ✅ 변경 3: null → selectedPart
+          <PartContent selectedPart={selectedPart} />
         )}
       </div>
     </PanelLayout>
