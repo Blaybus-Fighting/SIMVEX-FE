@@ -3,13 +3,8 @@ import GoogleIcon from "@/assets/icons/google.svg?react";
 
 export function GoogleLoginButton() {
     const handleLogin = () => {
-        const apiUrl = import.meta.env.VITE_API_URL || "https://knowwhohow.site";
-
-        // 2. '/api' 라는 글자를 제거해서 '서버 루트 주소' 만들기
-        const serverRoot = apiUrl.replace(/\/api$/, "");
-
-        // 명세서에 적힌 엔드포인트: /oauth2/authorization/google
-        window.location.href = `${serverRoot}/oauth2/authorization/google`;
+        const loginBaseUrl = import.meta.env.VITE_LOGIN_URL;
+        window.location.href = `${loginBaseUrl}/oauth2/authorization/google`;
     };
 
     return (
