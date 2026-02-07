@@ -1,4 +1,5 @@
 // src/types/chat.ts
+import type { ApiResponse } from "./common";
 
 // 1. 채팅 역할 (백엔드: USER, ASSISTANT)
 export type ChatRole = "USER" | "ASSISTANT";
@@ -31,3 +32,5 @@ export interface StreamChunk {
   chatRole?: ChatRole;
   timestamp?: string;
 }
+
+export type ChatListResponse = ApiResponse<ChatHistoryResponse>;
