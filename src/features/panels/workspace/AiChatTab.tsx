@@ -189,12 +189,16 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat/stream`, {
+      const streamUrl = `${import.meta.env.VITE_API_URL}/chat/stream`;
+
+      const response = await fetch(streamUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU0OTI4MTY4NTQ2NDU4MzE4MTAiLCJpZCI6MSwibmFtZSI6IkpleW9uZyBMZWUiLCJlbWFpbCI6ImxlZWFuNjY1MkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzcwMzgzNTM1LCJleHAiOjE3NzE2Nzk1MzV9.2bt8Vra8RWrqNgjYhjvHg1PwPTng-NN_yLkvfCZJw4A",
         },
+
+        credentials: "include",
+
         body: JSON.stringify({
           question: currentInput,
           sessionId: sessionId,

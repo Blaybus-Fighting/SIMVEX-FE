@@ -33,7 +33,9 @@ export default function MachinePanel() {
           <MachineContent />
         ) : (
           // ✅ 변경 3: null → selectedPart
-          <PartContent selectedPart={selectedPart} />
+          <PartContent selectedPart={selectedPart} onPartSelect={function (id: string): void {
+              throw new Error("Function not implemented.");
+            } } />
         )}
       </div>
     </PanelLayout>
