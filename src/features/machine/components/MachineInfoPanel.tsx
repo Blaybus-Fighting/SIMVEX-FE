@@ -8,12 +8,14 @@ interface Props {
   activeTab: "machine" | "part";
   onTabChange: (tab: "machine" | "part") => void;
   selectedPart: string | null;
+  onPartSelect: (id: string) => void;
 }
 
 export default function MachineInfoPanel({
   activeTab,
   onTabChange,
   selectedPart,
+  onPartSelect
 }: Props) {
   return (
     <div className="machine-panel">
@@ -22,7 +24,7 @@ export default function MachineInfoPanel({
 
       {activeTab === "machine" && <MachineContent />}
       {activeTab === "part" && (
-        <PartContent selectedPart={selectedPart} />
+        <PartContent selectedPart={selectedPart} onPartSelect={onPartSelect} />
       )}
     </div>
   );

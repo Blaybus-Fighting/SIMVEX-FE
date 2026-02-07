@@ -4,9 +4,10 @@ import PartImageStrip from "./PartImageStrip";
 
 interface Props {
   selectedPart: string | null;
+  onPartSelect: (id: string) => void;
 }
 
-export default function PartContent({ selectedPart }: Props) {
+export default function PartContent({ selectedPart, onPartSelect }: Props) {
   const [openRole, setOpenRole] = useState<boolean>(false);
 
   return (
@@ -56,7 +57,7 @@ export default function PartContent({ selectedPart }: Props) {
       </div>
 
       {/* ================= 부품 이미지 ================= */}
-      <PartImageStrip selectedPart={selectedPart} />
+      <PartImageStrip selectedPart={selectedPart} onSelect={onPartSelect} />
     </>
   );
 }
