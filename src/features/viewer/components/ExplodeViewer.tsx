@@ -2,7 +2,8 @@ import { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 // import * as THREE from "three";
-import { Suspension } from "./models/Suspension";
+// import { Suspension } from "./models/Suspension";
+import { MachineVice } from "./models/MachineVice";
 // import { RobotGlipper } from "./models/RobotGlippers";
 // import { RobotGlipper } from "./models/RobotGlippers";
 
@@ -49,7 +50,8 @@ export default function ExplodeViewer({ explode, url, selectedPart }: Props) {
         <Environment preset="warehouse" />
 
         {/* <RobotGlipper explode={explode} selectedPart={selectedPart} /> */}
-        <Suspension explode={explode} selectedPart={selectedPart} />
+        {/* <Suspension explode={explode} selectedPart={selectedPart} /> */}
+        <MachineVice explode={explode} selectedPart={selectedPart} />
       </Suspense>
 
       {/* 마우스 회전/줌 */}

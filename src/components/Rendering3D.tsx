@@ -39,10 +39,14 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
     [baseParts],
   );
 
-  const modelUrl =
-    modelName === "Robot Gripper"
-      ? "/models/Robot Glipper.glb"
-      : "/models/Suspension.glb";
+  // 받아오는 모델명에 따라 받는 glb를 다르게 분기
+  const modelUrlMap: Record<string, string> = {
+    "Robot Gripper": "/models/Robot Glipper.glb",
+    Suspension: "/models/Suspension.glb",
+    "Machine Vice": "/models/MachineVice.glb",
+  };
+
+  const modelUrl = modelUrlMap[modelName];
 
   return (
     // 이 컴포넌트에 있는 페이지에도 h-full 적용해야 함
