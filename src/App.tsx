@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { AUTH_EVENT_NAME } from "@/utils/authEvent";
 import "./App.css";
-import TestPage from "@pages/TestPage.tsx";
 import StudyPage from "@pages/StudyPage.tsx";
 import LandingPage from "@/pages/LandingPage";
 
@@ -36,7 +35,6 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<LandingPage />} />
           <Route path="/study" element={<StudyPage />} />
-          <Route path="/test" element={<TestPage/>} />
         </Routes>
       </div>
   );

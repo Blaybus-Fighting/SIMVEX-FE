@@ -9,7 +9,7 @@ import {
 import { Fragment } from "react";
 import ChevronForward from "@assets/icons/chevron_forward.svg?react";
 
-type Part = {
+export type Part = {
   id: string;
   label: string;
   imgSrc?: string; // 슬롯에 이미지가 있으면 표시
@@ -91,18 +91,18 @@ export default function PartsDropdown({
                     title={part.label}
                   >
                     {/* 부품 썸네일 이미지 */}
-                    {/* {part.imgSrc ? (
-                        <img
-                          src={part.imgSrc}
-                          alt={part.label}
-                          className="h-[86px] w-[86px] object-contain"
-                          draggable={false}
-                        />
-                      ) : (
-                        <span className="text-sm text-white/80">
-                          {part.label}
-                        </span>
-                      )} */}
+                    {part.imgSrc ? (
+                      <img
+                        src={part.imgSrc}
+                        alt={part.label}
+                        className="h-[86px] w-[86px] object-contain"
+                        draggable={false}
+                      />
+                    ) : (
+                      <span className="text-sm text-white/80">
+                        {part.label}
+                      </span>
+                    )}
                   </MenuItem>
                 ))}
               </div>
