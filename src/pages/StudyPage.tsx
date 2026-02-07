@@ -1,15 +1,15 @@
-// import { useState } from "react";
-// import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
+import { useState } from "react";
+import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
 // import Rendering3D, { type Part } from "@/components/Rendering3D";
-// import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
+import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
 import "@/features/machine/components/machine.css";
 
 export default function StudyPage() {
   // 현재 탭
-  // const [activeTab, setActiveTab] = useState<"machine" | "part">("machine");
+  const [activeTab, setActiveTab] = useState<"machine" | "part">("machine");
 
   // 선택된 부품 id
-  // const [selectedPart, setSelectedPart] = useState<string | null>(null);
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
 
   /** 🔥 3D 부품 클릭 시 */
   // const handlePartClick = (part: Part) => {
@@ -27,15 +27,16 @@ export default function StudyPage() {
 
         {/* ===== 기계 / 부품 패널 ===== */}
         <div className="machine-area">
-          {/* <MachineInfoPanel
+          { <MachineInfoPanel
             activeTab={activeTab}
             onTabChange={setActiveTab}
             selectedPart={selectedPart}
-          /> */}
+            onPartSelect={setSelectedPart}
+          /> }
         </div>
 
         {/* ===== 노트 / AI 패널 ===== */}
-        <div className="ai-area">{/* <WorkspacePanel /> */}</div>
+        <div className="ai-area">{ <WorkspacePanel /> }</div>
       </div>
     </div>
   );

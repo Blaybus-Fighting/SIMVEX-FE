@@ -20,8 +20,12 @@ export default function LandingPage() {
       navigate("/study");
     } else {
       console.log("비로그인 상태임 -> 모달 열기");
-      // setIsModalOpen(true);
-      navigate("/study");  // 로그인 완료되면 해당 부분 고치기
+      setIsModalOpen(true);
+      setTimeout(() => {  // 로그인 완료되면 해당 부분 고치기
+        setIsModalOpen(false);
+
+        navigate("/study");
+      }, 1500); // 1500 = 1.5초
     }
   };
 
