@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PanelLayout } from "@/components/layout/PanelLayout";
 import { TabSwitcher } from "@/components/ui/TabSwitcher";
-import { NoteTab } from "./NoteTab";
+import { NoteTab } from "./note/NoteTab";
 import { AiChatTab } from "./AiChatTab";
 
 export function WorkspacePanel() {
