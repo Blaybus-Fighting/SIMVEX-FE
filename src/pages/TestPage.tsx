@@ -1,18 +1,25 @@
+import { useState } from "react";
 import Rendering3D from "@/Rendering3D";
 import MachinePanel from "@/features/machine/components/MachinePanel";
 import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
 
 export default function TestPage() {
+  // 🔥 선택된 부품 id를 여기서 관리
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+
   return (
     <div className="flex h-full">
       {/* ===== ① 3D 영역 ===== */}
       <div className="flex-1">
-        <Rendering3D modelName="Machine Vice" />
+        <Rendering3D
+          modelName="Machine Vice"
+          onPartSelect={setSelectedPart} // 👈 핵심 연결
+        />
       </div>
 
       {/* ===== ② 기계 / 부품 패널 ===== */}
       <div className="w-[380px] border-l border-[#2a2f3a]">
-        <MachinePanel />
+        <MachinePanel selectedPart={selectedPart} />
       </div>
 
       {/* ===== ③ 노트 / AI 패널 ===== */}
@@ -22,6 +29,7 @@ export default function TestPage() {
     </div>
   );
 }
+
 
 
 // import { useState } from "react";

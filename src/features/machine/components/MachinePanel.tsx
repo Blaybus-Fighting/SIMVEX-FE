@@ -6,9 +6,12 @@ import AiSummaryCard from "./AiSummaryCard";
 import MachineContent from "./MachineContent";
 import PartContent from "./PartContent";
 
-export default function MachinePanel() {
+interface Props {
+  selectedPart: string | null;
+}
+
+export default function MachinePanel({ selectedPart }: Props) {
   const [activeTab, setActiveTab] = useState<"LEFT" | "RIGHT">("LEFT");
-  const [selectedPart, setSelectedPart] = useState<string | null>(null);
 
   return (
     <PanelLayout
@@ -22,16 +25,15 @@ export default function MachinePanel() {
       }
     >
       <div className="machine-panel">
-        {/* AI 요약 (항상 표시) */}
+        {/* 🔥 AI 요약 항상 상단 */}
         <AiSummaryCard selectedPart={selectedPart} />
 
-        {/* 탭에 따른 콘텐츠 */}
         {activeTab === "LEFT" ? (
           <MachineContent />
         ) : (
           <PartContent
             selectedPart={selectedPart}
-            onPartSelect={setSelectedPart}
+            onPartSelect={() => {}}
           />
         )}
       </div>
