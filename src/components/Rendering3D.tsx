@@ -56,12 +56,14 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
         <div className="flex gap-3">
           <Dropdown
             buttonLabel="배경색"
+            left={true}
             items={[
               { label: "배경색1", onClick: () => alert("배경색1 선택") },
               { label: "배경색2", onClick: () => alert("배경색2 선택") },
             ]}
           />
           <Dropdown
+            left={true}
             buttonLabel="조명"
             items={[
               { label: "조명1", onClick: () => alert("조명1 선택") },
