@@ -10,21 +10,15 @@ export default function PartContent({ selectedPart, onPartSelect }: Props) {
   return (
     <>
       <MachineSection title="부품명">
-        spindlesocket (스핀들 지지대)
-      </MachineSection>
-
-      <MachineSection title="재질">
-        탄소강 (S45C / Carbon Steel)
+        {selectedPart ?? "부품을 선택해주세요"}
       </MachineSection>
 
       <MachineSection title="역할">
-        • 회전 하중을 안정적으로 지지한다.<br />
-        • 축방향 이동을 제한하여 구조적 안정성을 확보한다.<br />
-        • 클램핑 힘을 균일하게 전달한다.
+        선택된 부품의 역할 설명이 여기에 표시됩니다.
       </MachineSection>
 
       <MachineSection title="재질 변경해보기">
-        해당 재질 사용 시 생기는 상황 및 문제 1줄 노출
+        재질 변경 시 발생하는 특성 설명
       </MachineSection>
 
       <PartImageStrip
