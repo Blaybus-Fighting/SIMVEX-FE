@@ -13,9 +13,9 @@ const AI_SUMMARY_MAP: Record<string, string> = {
 
 export default function AiSummaryCard({ selectedPart }: Props) {
   const summaryText =
-    selectedPart && AI_SUMMARY_MAP[selectedPart]
-      ? AI_SUMMARY_MAP[selectedPart]
-      : "이론 및 용도 등을 4줄 이내로 요약합니다. 선택된 기계 또는 부품의 핵심 정보만 제공합니다.";
+  AI_SUMMARY_MAP[selectedPart ?? ""] ??
+  "이론 및 용도 등을 4줄 이내로 요약합니다. 선택된 기계 또는 부품의 핵심 정보만 제공합니다.";
+
 
   return (
     <div className="ai-card">
