@@ -7,11 +7,13 @@ import PartContent from "./PartContent";
 interface Props {
   activeTab: "machine" | "part";
   selectedPart: string | null;
+  onPartSelect: (id: string) => void;
 }
 
 export default function MachineInfoPanel({
   activeTab,
   selectedPart,
+  onPartSelect
 }: Props) {
   return (
     <>
@@ -21,7 +23,7 @@ export default function MachineInfoPanel({
       {/* 탭에 따른 콘텐츠만 렌더링 */}
       {activeTab === "machine" && <MachineContent />}
       {activeTab === "part" && (
-        <PartContent selectedPart={selectedPart} />
+        <PartContent selectedPart={selectedPart} onPartSelect={onPartSelect} />
       )}
     </>
   );

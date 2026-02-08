@@ -17,7 +17,7 @@ export function TabSwitcher({leftLabel, rightLabel, activeTab, onChange}: TabSwi
         type="button"
         onClick={() => onChange("LEFT")}
         className={cn(
-          "flex-1 py-3 text-center rounded-lg relative z-10 transition-colors font-medium",
+          "flex-1 py-1 text-center rounded-lg relative z-10 transition-colors font-medium",
           activeTab === "LEFT" ? "text-white" : "text-gray-400 hover:text-gray-200"
         )}
       >
