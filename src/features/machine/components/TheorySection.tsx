@@ -1,32 +1,24 @@
 import { useState } from "react";
-import "./machine.css";
 
-export default function TheorySection({
-  children,
-}: {
+interface Props {
   children: React.ReactNode;
-}) {
+}
+
+export default function TheorySection({ children }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="theory-section">
-      <div className="section-title">주요 이론</div>
-
-      {open && (
-        <div className="section-body">
-          {children}
-        </div>
-      )}
+    <>
+      <div className={`section-body ${open ? "open" : ""}`}>
+        {children}
+      </div>
 
       <button
         className="section-toggle"
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen((v) => !v)}
       >
-        펼치기 {open ? "▲" : "▼"}
+        {open ? "접기 ▲" : "펼치기 ▼"}
       </button>
-
-      {/* ❗ 항상 여기만 */}
-      <div className="section-divider" />
-    </div>
+    </>
   );
 }
