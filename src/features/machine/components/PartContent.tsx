@@ -1,6 +1,6 @@
-import { useState } from "react";
 import "./machine.css";
 import PartImageStrip from "./PartImageStrip";
+import MachineSection from "./MachineSection";
 
 interface Props {
   selectedPart: string | null;
@@ -8,8 +8,6 @@ interface Props {
 }
 
 export default function PartContent({ selectedPart, onPartSelect }: Props) {
-  const [openRole, setOpenRole] = useState<boolean>(false);
-
   return (
     <>
       {/* ================= 부품명 ================= */}
@@ -28,25 +26,12 @@ export default function PartContent({ selectedPart, onPartSelect }: Props) {
         </div>
       </div>
 
-      {/* ================= 역할 ================= */}
-      <div className="part-section">
-        <div className="section-title">역할</div>
-
-        <div className={`section-body ${openRole ? "open" : ""}`}>
-          • 회전 하중을 안정적으로 지지한다.<br />
-          • 축방향 이동을 제한하여 구조적 안정성을 확보한다.<br />
-          • 클램핑 힘을 균일하게 전달한다.
-        </div>
-
-        <button
-          className="section-toggle section-toggle-center"
-          onClick={() => setOpenRole((prev) => !prev)}
-        >
-          {openRole ? "접기 ▲" : "펼치기 ▼"}
-        </button>
-
-        <div className="section-divider" />
-      </div>
+      {/* ================= 역할 (공통 접기/펼치기 사용) ================= */}
+      <MachineSection title="역할">
+        • 회전 하중을 안정적으로 지지한다.<br />
+        • 축방향 이동을 제한하여 구조적 안정성을 확보한다.<br />
+        • 클램핑 힘을 균일하게 전달한다.
+      </MachineSection>
 
       {/* ================= 재질 변경해보기 ================= */}
       <div className="part-section">
@@ -57,7 +42,10 @@ export default function PartContent({ selectedPart, onPartSelect }: Props) {
       </div>
 
       {/* ================= 부품 이미지 ================= */}
-      <PartImageStrip selectedPart={selectedPart} onSelect={onPartSelect} />
+      <PartImageStrip
+        selectedPart={selectedPart}
+        onSelect={onPartSelect}
+      />
     </>
   );
 }
