@@ -1,6 +1,6 @@
 // src/pages/TestPage.tsx
 import { useState } from "react";
-import Rendering3D from "@/Rendering3D";
+import Rendering3D from "@components/Rendering3D";
 import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
 import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
 import "@/features/machine/components/machine.css";
