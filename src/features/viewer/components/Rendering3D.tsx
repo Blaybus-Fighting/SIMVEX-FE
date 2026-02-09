@@ -44,8 +44,8 @@ export default function Rendering3D({
     <div className="flex flex-col h-full">
       <section className="flex justify-between items-end">
         <div className="flex gap-3">
-          <Dropdown buttonLabel="배경색" items={[]} />
-          <Dropdown buttonLabel="조명" items={[]} />
+          <Dropdown buttonLabel="배경색" left={true} items={[]} />
+          <Dropdown buttonLabel="조명" left={true} items={[]} />
         </div>
         <PartsDropdown parts={parts} />
       </section>
