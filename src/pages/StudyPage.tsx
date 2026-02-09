@@ -1,11 +1,34 @@
-// src/pages/StudyPage.tsx
-import { useState } from "react";
-import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
-import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
+import Header from "@/components/ui/Header";
+import ThreeDObjectCard from "@/components/ui/3DObjectCard";
 
 export default function StudyPage() {
-  const [activeTab] = useState<"machine" | "part">("machine");
-  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+  const objects = [
+    {
+      imageSrc: "/models/machine-vice.png",
+      modelName: "공작 기계 바이스",
+      updateTime: "방금 전",
+    },
+    {
+      imageSrc: "/models/robot-gripper.png",
+      modelName: "로봇 집게 조립도",
+      updateTime: "1일 전",
+    },
+    {
+      imageSrc: "/models/suspension.png",
+      modelName: "서스펜션 조립도",
+      updateTime: "1개월 전",
+    },
+    {
+      imageSrc: "/models/v4-engine.png",
+      modelName: "V4 실린더 엔진 조립도",
+      updateTime: "방금 전",
+    },
+    {
+      imageSrc: "/models/machine-vice.png",
+      modelName: "바이스",
+      updateTime: "방금 전",
+    },
+  ];
 
   return (
     <div className="workspace-layout">
