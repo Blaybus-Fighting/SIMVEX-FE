@@ -1,5 +1,4 @@
 type thumbnailPros = {
-  thumbnailUrl?: string;
   name: string;
   edit: string;
 };

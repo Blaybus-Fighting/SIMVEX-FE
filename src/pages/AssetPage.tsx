@@ -4,10 +4,10 @@ import ModelThumbnail from "@/features/viewer/components/ModelThumbnail";
 export default function AssetPage() {
   // 더미 데이터(API에서 받아올 예정)
   const models = [
-    { name: "공작 기계 바이스", edit: "방금 전" },
-    { name: "로봇 집게 조립도", edit: "1일 전" },
-    { name: "서스펜션 조립도", edit: "1개월 전" },
-    { name: "V4 엔진 로집도", edit: "방금 전" },
+    { id: 1, name: "공작 기계 바이스", edit: "방금 전" },
+    { id: 2, name: "로봇 집게 조립도", edit: "1일 전" },
+    { id: 3, name: "서스펜션 조립도", edit: "1개월 전" },
+    { id: 4, name: "V4 엔진 로집도", edit: "방금 전" },
   ];
 
   return (
@@ -28,7 +28,7 @@ export default function AssetPage() {
       {/* 부모 너비가 커지든 줄어들든 자동 분배 */}
       <section className="grid grid-cols-4 gap-5 w-full">
         {models.map((model) => (
-          <ModelThumbnail name={model.name} edit={model.edit} />
+          <ModelThumbnail key={model.id} name={model.name} edit={model.edit} />
         ))}
       </section>
     </div>
