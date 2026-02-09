@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
         "@assets": path.resolve(__dirname, "./src/assets"),
         "@components": path.resolve(__dirname, "./src/components"),
         "@pages": path.resolve(__dirname, "./src/pages"),
+        "@features": path.resolve(__dirname, "./src/features"),
       },
     },
     // 3. 서버 프록시 설정 추가 (CORS 해결 핵심)
