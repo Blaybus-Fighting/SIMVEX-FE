@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://knowwhohow.site/:path*"
+      "destination": "http://3.35.189.202:8080/api/:path*"
     },
     {
       "source": "/(.*)",
