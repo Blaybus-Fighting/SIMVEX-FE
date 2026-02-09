@@ -1,3 +1,42 @@
+// src/pages/TestPage.tsx
+import { useState } from "react";
+import Rendering3D from "@/Rendering3D";
+import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
+import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
+import "@/features/machine/components/machine.css";
+
+export default function TestPage() {
+  const [activeTab, setActiveTab] = useState<"machine" | "part">("machine");
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+
+  return (
+    <div className="workspace-layout">
+      <div className="viewer-area">
+        <Rendering3D
+          modelName="Machine Vice"
+          onPartSelect={(id) => {
+            setSelectedPart(id);
+            setActiveTab("part");
+          }}
+        />
+      </div>
+
+      <div className="machine-area">
+        <MachineInfoPanel
+          activeTab={activeTab}
+          selectedPart={selectedPart}
+          onPartSelect={setSelectedPart}
+        />
+      </div>
+
+      <div className="ai-area">
+        <WorkspacePanel />
+      </div>
+    </div>
+  );
+}
+
+
 // import { useState } from "react";
 // import Rendering3D, { type Part } from "@/components/Rendering3D";
 // import MachineInfoPanel from "@/features/machine/components/MachineInfoPanel";
