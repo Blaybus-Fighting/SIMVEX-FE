@@ -189,7 +189,7 @@ export function AiChatTab({sessionId}: AiChatTabProps) {
     setIsLoading(true);
 
     try {
-      const streamUrl = `${import.meta.env.VITE_API_URL}/chat/stream`;
+      const streamUrl = `${import.meta.env.VITE_API_URL}/api/chat/stream`;
 
       const response = await fetch(streamUrl, {
         method: "POST",
