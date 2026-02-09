@@ -1,36 +1,27 @@
-import { useEffect, useState } from "react";
-import "./machine.css";
-
 interface Props {
   selectedPart: string | null;
+  onSelectPart: (id: string) => void;
 }
 
 const PART_IMAGES = [
-  { id: "a-1", label: "부품 1" },
-  { id: "a-2", label: "부품 2" },
-  { id: "a-3", label: "부품 3" },
-  { id: "a-4", label: "부품 4" },
+  { id: "part-1", label: "부품 1" },
+  { id: "part-2", label: "부품 2" },
+  { id: "part-3", label: "부품 3" },
 ];
 
-export default function PartImageStrip({ selectedPart }: Props) {
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  /* 🔥 3D 클릭 → 자동 선택 */
-  useEffect(() => {
-    if (selectedPart) {
-      setActiveId(selectedPart);
-    }
-  }, [selectedPart]);
-
+export default function PartImageStrip({
+  selectedPart,
+  onSelectPart,
+}: Props) {
   return (
     <div className="part-image-strip">
       {PART_IMAGES.map((p) => (
         <div
           key={p.id}
           className={`part-image-item ${
-            activeId === p.id ? "active" : ""
+            selectedPart === p.id ? "active" : ""
           }`}
-          onClick={() => setActiveId(p.id)}
+          onClick={() => onSelectPart(p.id)}
         >
           {p.label}
         </div>
