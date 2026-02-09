@@ -1,5 +1,5 @@
+import type { ModelObject } from "@/types/model";
 import { create } from "zustand";
-import type { ModelObject } from "@/api/modelApi";
 
 type ModelStore = {
   models: ModelObject[];
