@@ -2,11 +2,13 @@
 import { robotGripperParts } from "./parts/robotGripperParts";
 import { suspensionParts } from "./parts/suspensionParts";
 import { machineViceParts } from "./parts/machineViceParts";
+import { v4EngineParts } from "./parts/v4EngineParts";
 
 export const partsByModel = {
-  "Robot Gripper": robotGripperParts,
+  "Robot-Gripper": robotGripperParts,
   Suspension: suspensionParts,
-  "Machine Vice": machineViceParts,
+  "Machine-Vice": machineViceParts,
+  "V4-Engine": v4EngineParts,
 } as const;
 
 export type ModelName = keyof typeof partsByModel;

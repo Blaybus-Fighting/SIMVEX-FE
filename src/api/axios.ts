@@ -5,18 +5,28 @@
 import axios from "axios";
 import { triggerAuthErrorEvent } from "@/utils/authEvent";
 
-// Axios 인스턴스 생성
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
   timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  // 브라우저가 쿠키를 서버로 보냄
+  headers: { "Content-Type": "application/json" },
+
+  // ✅ 쿠키 기반이면 이게 핵심
   withCredentials: true,
 });
 
-// 응답 인터셉터 (API 응답을 받고 나서 에러가 있으면 처리)
+// 요청 인터셉터 (Access Token 자동 첨부)
+api.interceptors.request.use(
+  (config) => {
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {

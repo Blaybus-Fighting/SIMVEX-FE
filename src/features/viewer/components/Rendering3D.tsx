@@ -4,13 +4,14 @@ import PartsDropdown from "@/components/ui/PartsDropdownBtn";
 import { ResolutionSlider } from "@/components/ui/ResolutionSlider";
 import ExplodeViewer from "@/features/viewer/components/ExplodeViewer";
 import { partsByModel } from "@/features/viewer/data";
+import type { ModelType } from "@/types/model";
+
+type Rendering3DProps = {
+  modelName: ModelType; // 허용된 모델 이름만 받아야 함
+  onPartSelect?: (id: string | null) => void;
+};
 
 export type ModelName = keyof typeof partsByModel;
-
-interface Rendering3DProps {
-  modelName: ModelName;
-  onPartSelect?: (id: string | null) => void;
-}
 
 export default function Rendering3D({
   modelName,
@@ -35,9 +36,9 @@ export default function Rendering3D({
   );
 
   const modelUrlMap: Record<string, string> = {
-    "Robot Gripper": "/models/Robot Gripper.glb",
+    "Robot-Gripper": "/models/Robot Gripper.glb",
     Suspension: "/models/Suspension.glb",
-    "Machine Vice": "/models/MachineVice.glb",
+    "Machine-Vice": "/models/MachineVice.glb",
   };
 
   return (
