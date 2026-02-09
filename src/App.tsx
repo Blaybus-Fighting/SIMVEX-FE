@@ -1,7 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import LandingPage from "@/pages/LandingPage"; // 기존 랜딩 페이지
-import StudyPage from "@/pages/StudyPage"; // StudyPage 임포트
+// import StudyPage from "@pages/StudyPage.tsx";
+import LandingPage from "@/pages/LandingPage";
+import StudyPage from "./pages/StudyPage";
+import AssetPage from "./pages/AssetPage";
 
 function App() {
   return (
@@ -10,9 +12,8 @@ function App() {
         {/* / 경로로 들어와도 /home으로 보내기 */}
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<LandingPage />} />
-        
-        {/* StudyPage 라우팅 추가 */}
         <Route path="/study" element={<StudyPage />} />
+        <Route path="/asset" element={<AssetPage />} />
       </Routes>
     </div>
   );

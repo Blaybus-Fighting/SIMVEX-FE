@@ -47,7 +47,7 @@ export default function LandingPage() {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
       console.log("로그인 상태임 -> 학습 페이지로 이동");
-      navigate("/study");
+      navigate("/asset");
     } else {
       console.log("비로그인 상태임 -> 모달 열기");
       setIsModalOpen(true);
