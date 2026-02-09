@@ -1,12 +1,13 @@
-import "./machine.css";
-import PartImageStrip from "./PartImageStrip";
+// src/features/machine/components/PartContent.tsx
 import MachineSection from "./MachineSection";
+import PartImageStrip from "./PartImageStrip";
 
 interface Props {
   selectedPart: string | null;
+  onSelectPart: (id: string) => void;
 }
 
-export default function PartContent({ selectedPart }: Props) {
+export default function PartContent({ selectedPart, onSelectPart }: Props) {
   if (!selectedPart) {
     return <div className="section-body">부품을 선택해주세요.</div>;
   }
@@ -27,9 +28,10 @@ export default function PartContent({ selectedPart }: Props) {
         • 클램핑 힘 전달
       </MachineSection>
 
-      <PartImageStrip selectedPart={selectedPart} onSelectPart={function (_id: string): void {
-        throw new Error("Function not implemented.");
-      } } />
+      <PartImageStrip
+        selectedPart={selectedPart}
+        onSelectPart={onSelectPart}
+      />
     </>
   );
 }
