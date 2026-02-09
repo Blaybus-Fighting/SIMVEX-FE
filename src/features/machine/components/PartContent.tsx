@@ -1,30 +1,35 @@
-import MachineSection from "./MachineSection";
+import "./machine.css";
 import PartImageStrip from "./PartImageStrip";
+import MachineSection from "./MachineSection";
 
 interface Props {
   selectedPart: string | null;
-  onPartSelect: (id: string) => void;
 }
 
-export default function PartContent({ selectedPart, onPartSelect }: Props) {
+export default function PartContent({ selectedPart }: Props) {
+  if (!selectedPart) {
+    return <div className="section-body">부품을 선택해주세요.</div>;
+  }
+
   return (
     <>
       <MachineSection title="부품명">
-        {selectedPart ?? "부품을 선택해주세요"}
+        {selectedPart}
+      </MachineSection>
+
+      <MachineSection title="재질">
+        탄소강 (S45C)
       </MachineSection>
 
       <MachineSection title="역할">
-        선택된 부품의 역할 설명이 여기에 표시됩니다.
+        • 회전 하중을 안정적으로 지지<br />
+        • 축방향 이동 제한<br />
+        • 클램핑 힘 전달
       </MachineSection>
 
-      <MachineSection title="재질 변경해보기">
-        재질 변경 시 발생하는 특성 설명
-      </MachineSection>
-
-      <PartImageStrip
-        selectedPart={selectedPart}
-        onSelect={onPartSelect}
-      />
+      <PartImageStrip selectedPart={selectedPart} onSelectPart={function (_id: string): void {
+        throw new Error("Function not implemented.");
+      } } />
     </>
   );
 }
