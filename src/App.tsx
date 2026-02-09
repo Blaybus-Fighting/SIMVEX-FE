@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import StudyPage from "@pages/StudyPage.tsx";
 import LandingPage from "@/pages/LandingPage";
-import StudyPage from "./pages/StudyPage";
 import AssetPage from "./pages/AssetPage";
 
 function App() {
