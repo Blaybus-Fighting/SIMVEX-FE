@@ -1,5 +1,5 @@
 /* ======================================================
-   전체 가로 레이아웃
+   레이아웃 & 스크롤 (구조 전용)
 ====================================================== */
 .workspace-layout {
   display: flex;
@@ -31,14 +31,14 @@
   box-sizing: border-box;
 }
 
+/* ======================================================
+   패널 본체
+====================================================== */
 .machine-panel {
   position: relative;
   width: 100%;
-  min-width: 0;
   height: 100%;
-  background: #1f2430;
-  border-radius: 16px;
-  padding: 28px;
+  min-width: 0;
   overflow-y: auto;
   overflow-x: visible;
   box-sizing: border-box;
@@ -57,68 +57,7 @@
 }
 
 /* ======================================================
-   탭 바
-====================================================== */
-.machine-header {
-  margin-bottom: 36px;
-}
-
-.machine-tab-bar {
-  display: flex;
-  height: 52px;
-  background: #2b3140;
-  border-radius: 14px;
-  padding: 4px;
-  text-align: center;
-}
-
-.machine-tab {
-  flex: 1;
-  border: none;
-  background: transparent;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: 600;
-  color: #9ca3af;
-  cursor: pointer;
-  text-align: center;
-}
-
-.machine-tab.active {
-  background: #3b5bdb;
-  color: #ffffff;
-}
-
-/* ======================================================
-   AI 요약
-====================================================== */
-.ai-card {
-  background: #2a2f3a;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 48px;
-}
-
-.ai-header {
-  font-size: 18px;
-  font-weight: 700;
-  color: #c7d2fe;
-  margin-bottom: 16px;
-}
-
-.ai-inner-card {
-  background: #1f2430;
-  border-radius: 12px;
-  padding: 22px;
-  min-height: 120px;
-  font-size: 14px;
-  color: #e5e7eb;
-  line-height: 1.7;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* ======================================================
-   섹션 공통
+   섹션 간격 (구조만 담당)
 ====================================================== */
 .usage-section,
 .theory-section,
@@ -126,23 +65,14 @@
   margin-bottom: 52px;
 }
 
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: #f9fafb;
-}
-
-.usage-text,
+/* ======================================================
+   펼치기 / 접기 본문
+====================================================== */
 .section-body {
-  font-size: 16px;
-  color: #d1d5db;
-  line-height: 1.8;
   max-height: 3.6em;
   overflow: hidden;
 }
 
-.usage-text.open,
 .section-body.open {
   max-height: none;
 }
@@ -155,9 +85,9 @@
   margin: 16px auto 20px;
   background: none;
   border: none;
-  font-size: 15px;
-  color: #9ca3af;
   cursor: pointer;
+  color: #9ca3af;
+  font-size: 15px;
 }
 
 /* ======================================================
