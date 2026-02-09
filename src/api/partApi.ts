@@ -28,7 +28,7 @@ export const getPartList = async (
 
 // 모델 객체 상세 조회
 export const getPart = async (partId: number): Promise<partResponse> => {
-  const { data } = await api.get<partResponse>(`/model-objects/${partId}`);
+  const { data } = await api.get<partResponse>(`/parts/${partId}`);
   return data;
 };
 

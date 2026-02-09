@@ -1,3 +1,5 @@
+import { getPart } from "@/api/partApi";
+import { usePartStore } from "@/store/partStore";
 import type { PartObject } from "@/types/part";
 import PartThumb3D from "@features/viewer/components/PartThumb3D";
 import { MenuItem, MenuItems, Transition } from "@headlessui/react";
@@ -22,6 +24,25 @@ export default function PartsMenuContent({
     if (open) getParts();
   }, [open, getParts]);
 
+  const {
+    // part,
+    setPart,
+  } = usePartStore();
+
+  const handleDetailPart = async (partId: number) => {
+    const res = await getPart(partId);
+    try {
+      if (res.isSuccess) {
+        console.log("부품 상세 조회 성공: ", res.data);
+        setPart(res.data); // 부품 상세 정보 저장
+      } else {
+        console.log("에러 데이터: ", res.error);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <Transition as={Fragment}>
       <MenuItems className="absolute right-0 z-50 mt-1 w-[22rem] rounded-lg bg-background-400 p-[0.75rem]">
@@ -42,6 +63,7 @@ export default function PartsMenuContent({
                 transition
                 hover:border-primary-100"
                 title={part.name}
+                onClick={() => handleDetailPart(part.id)}
               >
                 {open && part.modelUrl ? (
                   <PartThumb3D url={part.modelUrl} />
