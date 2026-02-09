@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import Dropdown from "./ui/DropdownBtn";
-import PartsDropdown from "./ui/PartsDropdownBtn";
-import { ResolutionSlider } from "./ui/ResolutionSlider";
+import Dropdown from "@/components/ui/DropdownBtn";
+import PartsDropdown from "@/components/ui/PartsDropdownBtn";
+import { ResolutionSlider } from "@/components/ui/ResolutionSlider";
 import ExplodeViewer from "@/features/viewer/components/ExplodeViewer";
 import { partsByModel } from "@/features/viewer/data";
 
