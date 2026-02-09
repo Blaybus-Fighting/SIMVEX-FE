@@ -5,17 +5,11 @@ import { ResolutionSlider } from "./ui/ResolutionSlider";
 import ExplodeViewer from "@/features/viewer/components/ExplodeViewer";
 import { partsByModel } from "@/features/viewer/data";
 
-export type Part = {
-  id: string;
-  label: string;
-  imgSrc?: string;
-};
-
 export type ModelName = keyof typeof partsByModel;
 
 interface Rendering3DProps {
   modelName: ModelName;
-  onPartSelect?: (id: string | null) => void; // ✅ 추가
+  onPartSelect?: (id: string | null) => void;
 }
 
 export default function Rendering3D({
@@ -34,7 +28,7 @@ export default function Rendering3D({
         ...p,
         onClick: () => {
           setSelectedPart(p.id);
-          onPartSelect?.(p.id); // 🔥 부모(TestPage)로 전달
+          onPartSelect?.(p.id);
         },
       })),
     [baseParts, onPartSelect],
@@ -56,7 +50,7 @@ export default function Rendering3D({
         <PartsDropdown parts={parts} />
       </section>
 
-      <div className="flex flex-1 w-2/3">
+      <div className="flex flex-1">
         <ExplodeViewer
           explode={explode}
           url={modelUrlMap[modelName]}
@@ -64,7 +58,7 @@ export default function Rendering3D({
         />
       </div>
 
-      <section className="flex justify-between items-end">
+      <section className="flex justify-end">
         <ResolutionSlider value={explodePct} onChange={setExplodePct} />
       </section>
     </div>
