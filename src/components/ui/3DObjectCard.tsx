@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 interface ThreeDObjectCardProps {
+  id: number;
   name: string;
   thumbnailUrl: string;
   // updateTime: string;
@@ -6,14 +9,16 @@ interface ThreeDObjectCardProps {
 }
 
 export default function ThreeDObjectCard({
+  id,
   name,
   thumbnailUrl,
   // updateTime,
   // onSelectPart,
 }: ThreeDObjectCardProps) {
+  const navigate = useNavigate();
   return (
     <button
-      // onClick={onSelectPart}
+      onClick={() => navigate(`/study?modelId=${id}`)} // 모델 아이디를 전달한 채 페이지 이동
       className="
         group
         w-full
@@ -34,7 +39,7 @@ export default function ThreeDObjectCard({
           h-full
           w-full
           object-contain
-          scale-150    /* ⭐ 기본 확대 */
+          scale-150
           "
         />
       </div>

@@ -62,6 +62,7 @@ export default function AssetPage() {
           {models.map((m) => (
             <ThreeDObjectCard
               key={m.id}
+              id={m.id}
               name={m.name}
               thumbnailUrl={m.thumbnailUrl}
               // updateTime={obj.updateTime}
