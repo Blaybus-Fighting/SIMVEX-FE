@@ -51,7 +51,7 @@ export default function StudyPage() {
   }
 
   return (
-    <div className="flex w-full h-screen bg-[#0f172a] p-4 gap-4 overflow-hidden">
+    <div className="flex w-full h-full bg-[#0f172a] p-2 gap-4 overflow-hidden">
       {model && <Rendering3D modelName={model.name} />}
 
       {/* 3D 영역: flex-[1.8]으로 더 넓게 차지 */}
