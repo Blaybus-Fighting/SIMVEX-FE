@@ -27,7 +27,6 @@ export default function LandingPage() {
         const res = await api.post<{ accessToken: string }>("/auth/exchange", {
           ticket,
         });
-        console.log("응닶값: ", res);
         sessionStorage.setItem("accessToken", res.data.accessToken);
 
         // ticket은 accessToken 받으면 무조건 지워야 함

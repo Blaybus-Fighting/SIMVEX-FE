@@ -9,7 +9,6 @@ const params = new URLSearchParams(window.location.search);
 const ticket = params.get("ticket");
 if (ticket) {
   sessionStorage.setItem("oauth_ticket", ticket);
-  console.log("ticket: ", ticket);
 
   // 2) URL에서 ticket 제거
   window.history.replaceState({}, document.title, window.location.pathname);
