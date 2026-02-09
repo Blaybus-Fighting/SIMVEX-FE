@@ -2,7 +2,9 @@
   margin: 0 auto;
   /* 100vh: 지금 보고 있는 화면의 100% */
   height: 100vh;
-  padding: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   text-align: center;
 }
 

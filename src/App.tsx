@@ -2,15 +2,17 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import StudyPage from "@pages/StudyPage.tsx";
 import LandingPage from "@/pages/LandingPage";
+import AssetPage from "./pages/AssetPage";
 
 function App() {
   return (
     <div className="h-full">
       <Routes>
-        {/* / 경로로 들어와도 home으로 보내기 */}
-        <Route path="/" element={<Navigate to="/home" replace/>}/>
-        <Route path="/home" element={<LandingPage/>}/>
-        <Route path="/study" element={<StudyPage/>}/>
+        {/* / 경로로 들어와도 /home으로 보내기 */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<LandingPage />} />
+        <Route path="/study" element={<StudyPage />} />
+        <Route path="/asset" element={<AssetPage />} />
       </Routes>
     </div>
   );

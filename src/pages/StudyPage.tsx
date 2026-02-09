@@ -24,7 +24,6 @@ export default function StudyPage() {
       <div className="flex-1 min-w-0">
         <WorkspacePanel/>
       </div>
-
     </div>
   );
 }
