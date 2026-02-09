@@ -24,16 +24,21 @@ export default function LandingPage() {
 
     (async () => {
       try {
-        const res = await api.post<{ accessToken: string }>("/auth/exchange", {
+        const res = await api.post("/auth/exchange", {
           ticket,
         });
-        sessionStorage.setItem("accessToken", res.data.accessToken);
 
-        // ticket은 accessToken 받으면 무조건 지워야 함
-        sessionStorage.removeItem("oauth_ticket");
-        // lock도 정리
-        sessionStorage.removeItem(lockKey);
+        if (res.status == 200) {
+          const accessToken = res.data.data.accessToken;
+          sessionStorage.setItem("accessToken", accessToken);
 
+          // ticket은 accessToken 받으면 무조건 지워야 함
+          sessionStorage.removeItem("oauth_ticket");
+          // lock도 정리
+          sessionStorage.removeItem(lockKey);
+        } else {
+          console.log("토큰 받기 실패");
+        }
         navigate("/home", { replace: true });
       } catch (e) {
         console.error("exchange 실패:", e);
@@ -45,8 +50,9 @@ export default function LandingPage() {
 
   const handleStartClick = () => {
     const token = sessionStorage.getItem("accessToken");
+
     if (token) {
-      console.log("로그인 상태임 -> 학습 페이지로 이동");
+      console.log("로그인 상태임 -> 학습 페이지로 이동", token);
       navigate("/asset");
     } else {
       console.log("비로그인 상태임 -> 모달 열기");
