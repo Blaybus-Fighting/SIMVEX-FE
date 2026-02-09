@@ -24,7 +24,9 @@ export default function AssetPage() {
           ]}
         />
       </section>
-      <section className="flex gap-5 border border-white">
+      {/* grid: 카드 개수 바뀌면 grid-cols-3, 5로 바로 대응 가능 */}
+      {/* 부모 너비가 커지든 줄어들든 자동 분배 */}
+      <section className="grid grid-cols-4 gap-5 w-full">
         {models.map((model) => (
           <ModelThumbnail name={model.name} edit={model.edit} />
         ))}
