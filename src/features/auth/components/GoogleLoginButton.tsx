@@ -3,10 +3,10 @@ import GoogleIcon from "@/assets/icons/google.svg?react";
 
 export function GoogleLoginButton() {
   const handleLogin = () => {
-    const loginBaseUrl = import.meta.env.VITE_AUTH_API_URL;
+    const loginBaseUrl = import.meta.env.VITE_LOGIN_API_URL;
 
     if (!loginBaseUrl) {
-      console.error("VITE_AUTH_API_URL is not defined");
+      console.error("VITE_LOGIN_API_URL is not defined");
       return;
     }
 
