@@ -44,7 +44,6 @@ function makeCanvasTexture(
   draw: (ctx: CanvasRenderingContext2D) => void,
   opts?: { repeat?: [number, number]; rotation?: number },
 ) {
-  // SSR(Next.js 등) 대비
   if (typeof document === "undefined") {
     const t = new THREE.Texture();
     t.needsUpdate = true;
@@ -395,30 +394,17 @@ export function MachineVice({
 
       {/* 고정 죠(거친 주물) */}
       <mesh
-        geometry={nodes["Part7-TrapezSpindel"].geometry}
-        material={mat("Part7-TrapezSpindel", mats.brass, highlighted.brass)}
-        position={pos("Spindle")}
-        rotation={[2.321, Math.PI / 2, 0]}
-        scale={0.12}
-      />
-
-      {/* 스핀들 지지대(주물) */}
-      <mesh
-        geometry={nodes.Part4_spindelsockel.geometry}
-        material={mat("SpindleBase", mats.castIron, highlighted.castIron)}
-        position={pos("SpindleBase")}
-        rotation={[0, Math.PI / 2, 0]}
+        geometry={nodes.Part2_Feste_Backe.geometry}
+        material={mat("Part2_Feste_Backe", mats.castIron, highlighted.castIron)}
+        position={pos("FixedJaw")}
+        rotation={[0, -Math.PI / 2, 0]}
         scale={0.1}
       />
 
       {/* 스핀들 지지대(주물) */}
       <mesh
         geometry={nodes.Part4_spindelsockel.geometry}
-        material={mat(
-          "Part4_spindelsockel",
-          mats.castIron,
-          highlighted.castIron,
-        )}
+        material={mat("SpindleBase", mats.castIron, highlighted.castIron)}
         position={pos("SpindleBase")}
         rotation={[0, Math.PI / 2, 0]}
         scale={0.1}

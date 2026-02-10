@@ -111,6 +111,7 @@ export function RobotGripper({
       .replace(/[^a-zA-Z]/g, "") // 알파벳만 남김
       .toUpperCase(); // 전부 대문자
 
+  const GROUP_PREFIXES = ["LINK", "GEARLINK", "BASE", "GRIPPER"];
   const isSelected = (meshName: string) => {
     // true일 경우 하이라이트, false일 경우 투명
     if (!part?.name) return true;
@@ -121,25 +122,16 @@ export function RobotGripper({
     // 1) 완전 일치
     if (picked === target) return true;
 
-    // 2) 묶음 규칙 (정규화된 prefix 기준)
+    // 2) Pin 특별 케이스
     if (picked.startsWith("PIN")) {
       return target === "PIN" || target.startsWith("PIN");
     }
 
-    if (picked.startsWith("LINK")) {
-      return target.startsWith("LINK");
-    }
-
-    if (picked.startsWith("GEARLINK")) {
-      return target.startsWith("GEARLINK");
-    }
-
-    if (picked.startsWith("BASE")) {
-      return target.startsWith("BASE");
-    }
-
-    if (picked.startsWith("GRIPPER")) {
-      return target.startsWith("GRIPPER");
+    // 3) 나머지 그룹 접두사 매칭
+    for (const prefix of GROUP_PREFIXES) {
+      if (picked.startsWith(prefix)) {
+        return target.startsWith(prefix);
+      }
     }
   };
   /**
