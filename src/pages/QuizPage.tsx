@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-// import QuizModal from "@/components/quiz/QuizModal";
-
 import HeaderFrame from "@/components/layout/HeaderFrame";
 import UserMenu from "@/components/common/UserMenu";
 import LogoIcon from "@/assets/icons/logo.svg?react";
@@ -9,18 +7,6 @@ import SearchIcon from "@/assets/icons/search.svg?react";
 import { useModelStore } from "@/store/modelStore";
 import type { ModelObject } from "@/types/model";
 import QuizModal from "@/components/quiz/QuizModal";
-
-// type Machine = {
-//   id: string;
-//   name: string;
-// };
-
-// const MACHINES: Machine[] = [
-//   { id: "machine-vice", name: "공작 기계 바이스" },
-//   { id: "suspension", name: "서스펜션 시스템" },
-//   { id: "v4", name: "V4 엔진" },
-//   { id: "robot", name: "로봇 집게" },
-// ];
 
 export default function QuizPage() {
   const location = useLocation();
