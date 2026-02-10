@@ -27,13 +27,7 @@ export default function ModelRenderer({
         />
       );
     case "Suspension":
-      return (
-        <Suspension
-          url={modelUrl}
-          explode={explode}
-          selectedPart={selectedPart}
-        />
-      );
+      return <Suspension url={modelUrl} explode={explode} />;
     case "Robot Gripper":
       return (
         <RobotGripper

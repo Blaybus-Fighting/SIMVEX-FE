@@ -7,9 +7,12 @@ import { getDetailModel } from "@/api/modelApi";
 import ApiLoadingBar from "@/components/common/ApiLoadingBar";
 import { useDetailModelStore } from "@/store/modelStore";
 import Rendering3D from "@/features/viewer/components/Rendering3D";
+import { usePartListStore, usePartStore } from "@/store/partStore";
 
 export default function StudyPage() {
   const { model, setModel } = useDetailModelStore();
+  const clearPartList = usePartListStore((state) => state.clear);
+  const clearPart = usePartStore((state) => state.clear);
 
   const [loading, setLoading] = useState(false);
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
@@ -17,6 +20,15 @@ export default function StudyPage() {
   const [searchParams] = useSearchParams(); // query string 방식: 새로고침 후에도 값 유지됨
 
   const modelId = Number(searchParams.get("modelId")); // modelId 가져오기
+
+  // 페이지 나갈 때 parts와 part 초기화
+  useEffect(() => {
+    return () => {
+      clearPartList();
+      clearPart();
+      setSelectedPart(null);
+    };
+  }, [clearPartList, clearPart]);
 
   useEffect(() => {
     // 모델 객체 상세 조회
@@ -51,11 +63,11 @@ export default function StudyPage() {
   }
 
   return (
-    <div className="flex w-full h-full bg-[#0f172a] p-2 gap-4 overflow-hidden">
-      {model && <Rendering3D modelName={model.name} />}
-
+    <div className="flex w-full h-full p-2 gap-4 overflow-hidden">
       {/* 3D 영역: flex-[1.8]으로 더 넓게 차지 */}
-      <div className="flex-[1.8] min-w-0 bg-slate-900/50 rounded-xl border border-white/5" />
+      <div className="flex-[1.8] min-w-0">
+        {model && <Rendering3D modelName={model.name} />}
+      </div>
 
       {/* 기계/부품 영역: flex-1 */}
       <div className="flex-1 min-w-0">

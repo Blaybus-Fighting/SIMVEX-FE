@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
+import { usePartStore } from "@/store/partStore";
 
 /**
  * glTF 타입 정의
@@ -28,7 +29,7 @@ type GLTFResult = GLTF & {
     Base_Plate: THREE.Mesh;
     Base_Mounting_bracket: THREE.Mesh;
     Base_Gear: THREE.Mesh;
-    Glipper_2: THREE.Mesh;
+    Gripper_2: THREE.Mesh;
   };
   materials: {
     "ChromePolished.011": THREE.MeshStandardMaterial;
@@ -81,15 +82,15 @@ type PartKey =
   | "Base_Plate"
   | "Base_Mounting_bracket"
   | "Base_Gear"
-  | "Glipper_2";
+  | "Gripper_2";
 
 export function RobotGripper({
   explode = 0,
-  selectedPart = null,
   url = "/models/Robot Gripper.glb",
   ...props
 }: ModelProps & { url?: string }) {
   const { nodes, materials } = useGLTF(url) as unknown as GLTFResult;
+  const { part } = usePartStore(); // 선택한 부품
 
   const ghostMaterial = useMemo(
     () =>
@@ -104,20 +105,42 @@ export function RobotGripper({
     [],
   );
 
-  // 선택 판정 함수 (중요: Pin/Link 같은 “묶음” 처리)
+  // 정규화(공백 제거하고 알파벳만 남긴 후 다 대문자로 변환)
+  const normalize = (name: string) =>
+    name
+      .replace(/[^a-zA-Z]/g, "") // 알파벳만 남김
+      .toUpperCase(); // 전부 대문자
+
   const isSelected = (meshName: string) => {
-    if (!selectedPart) return true;
+    // true일 경우 하이라이트, false일 경우 투명
+    if (!part?.name) return true;
 
-    // 선택한 부품이 해당 부품과 이름이 동일한지 체크
-    if (meshName === selectedPart) return true;
+    const picked = normalize(part.name);
+    const target = normalize(meshName);
 
-    // 묶음 규칙: Pin 선택 시 Pin_2, Pin_3... 전부 포함
-    if (selectedPart === "Pin")
-      return meshName === "Pin" || meshName.startsWith("Pin_");
-    if (selectedPart === "Link") return meshName.startsWith("Link_");
-    if (selectedPart === "Gear_Link") return meshName.startsWith("Gear_Link_");
+    // 1) 완전 일치
+    if (picked === target) return true;
 
-    return false;
+    // 2) 묶음 규칙 (정규화된 prefix 기준)
+    if (picked.startsWith("PIN")) {
+      return target === "PIN" || target.startsWith("PIN");
+    }
+
+    if (picked.startsWith("LINK")) {
+      return target.startsWith("LINK");
+    }
+
+    if (picked.startsWith("GEARLINK")) {
+      return target.startsWith("GEARLINK");
+    }
+
+    if (picked.startsWith("BASE")) {
+      return target.startsWith("BASE");
+    }
+
+    if (picked.startsWith("GRIPPER")) {
+      return target.startsWith("GRIPPER");
+    }
   };
   /**
    * 원래 위치들(base) - gltfjsx 코드 값 그대로
@@ -144,7 +167,7 @@ export function RobotGripper({
         Base_Plate: new THREE.Vector3(0, 0, 0),
         Base_Mounting_bracket: new THREE.Vector3(0.05, 0.04, -0.1),
         Base_Gear: new THREE.Vector3(-0.17, -0.015, -0.075),
-        Glipper_2: new THREE.Vector3(-0.86, 0.001, 0),
+        Gripper_2: new THREE.Vector3(-0.86, 0.001, 0),
       }) satisfies Record<PartKey, THREE.Vector3>,
     [],
   );
@@ -170,7 +193,7 @@ export function RobotGripper({
         Link_2: new THREE.Vector3(0, 0, 1),
         Link_1: new THREE.Vector3(0, 0, -1),
         Gripper: new THREE.Vector3(-1, 0, 1),
-        Glipper_2: new THREE.Vector3(-1, 0, -1),
+        Gripper_2: new THREE.Vector3(-1, 0, -1),
         Gear_Link_2: new THREE.Vector3(0, 1, 1),
         Gear_Link_1: new THREE.Vector3(0, 1, -1),
         Base_Plate: new THREE.Vector3(0, -1, 0),
@@ -206,7 +229,7 @@ export function RobotGripper({
         Base_Plate: 0.53,
         Base_Mounting_bracket: 0.55,
         Base_Gear: 0.54,
-        Glipper_2: 0.6,
+        Gripper_2: 0.6,
       }) satisfies Record<PartKey, number>,
     [],
   );
@@ -234,6 +257,7 @@ export function RobotGripper({
     <group {...props} dispose={null}>
       <group name="Scene">
         <mesh
+          key="28_9"
           name="Pin_9"
           castShadow
           receiveShadow
@@ -249,6 +273,7 @@ export function RobotGripper({
           scale={[0.05, 0.1, 0.1]}
         />
         <mesh
+          key="28_8"
           name="Pin_8"
           castShadow
           receiveShadow
@@ -263,6 +288,7 @@ export function RobotGripper({
           scale={[0.08, 0.1, 0.1]}
         />
         <mesh
+          key="28_7"
           name="Pin_7"
           castShadow
           receiveShadow
@@ -277,6 +303,7 @@ export function RobotGripper({
           scale={[0.08, 0.1, 0.1]}
         />
         <mesh
+          key="28_6"
           name="Pin_6"
           castShadow
           receiveShadow
@@ -291,6 +318,7 @@ export function RobotGripper({
           scale={[0.07, 0.1, 0.1]}
         />
         <mesh
+          key="28_5"
           name="Pin_5"
           castShadow
           receiveShadow
@@ -305,6 +333,7 @@ export function RobotGripper({
           scale={[0.05, 0.1, 0.1]}
         />
         <mesh
+          key="28_4"
           name="Pin_4"
           castShadow
           receiveShadow
@@ -319,6 +348,7 @@ export function RobotGripper({
           scale={[0.05, 0.1, 0.1]}
         />
         <mesh
+          key="28_3"
           name="Pin_3"
           castShadow
           receiveShadow
@@ -333,6 +363,7 @@ export function RobotGripper({
           scale={[0.07, 0.1, 0.1]}
         />
         <mesh
+          key="28_2"
           name="Pin_2"
           castShadow
           receiveShadow
@@ -347,6 +378,7 @@ export function RobotGripper({
           scale={[0.055, 0.1, 0.1]}
         />
         <mesh
+          key="28_10"
           name="Pin_10"
           castShadow
           receiveShadow
@@ -361,6 +393,7 @@ export function RobotGripper({
           scale={[0.05, 0.1, 0.1]}
         />
         <mesh
+          key="28_1"
           name="Pin"
           castShadow
           receiveShadow
@@ -373,6 +406,7 @@ export function RobotGripper({
           scale={[0.055, 0.1, 0.1]}
         />
         <mesh
+          key="27_2"
           name="Link_2"
           castShadow
           receiveShadow
@@ -385,6 +419,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="27_1"
           name="Link_1"
           castShadow
           receiveShadow
@@ -397,6 +432,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="26"
           name="Gripper"
           castShadow
           receiveShadow
@@ -409,6 +445,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="25"
           name="Gear_Link_2"
           castShadow
           receiveShadow
@@ -421,6 +458,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="24"
           name="Gear_Link_1"
           castShadow
           receiveShadow
@@ -435,6 +473,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="23"
           name="Base_Plate"
           castShadow
           receiveShadow
@@ -449,6 +488,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="22"
           name="Base_Mounting_bracket"
           castShadow
           receiveShadow
@@ -463,6 +503,7 @@ export function RobotGripper({
           scale={0.1}
         />
         <mesh
+          key="21"
           name="Base_Gear"
           castShadow
           receiveShadow
@@ -480,11 +521,11 @@ export function RobotGripper({
           name="Glipper_2"
           castShadow
           receiveShadow
-          geometry={nodes.Glipper_2.geometry}
+          geometry={nodes.Gripper_2.geometry}
           material={
             isSelected("Glipper_2") ? materials["LightRed.004"] : ghostMaterial
           }
-          position={pos("Glipper_2")}
+          position={pos("Gripper_2")}
           rotation={[-Math.PI / 2, 0, 2.793]}
           scale={0.1}
         />

@@ -10,7 +10,7 @@ type ResolutionSliderProps = {
 
 export function ResolutionSlider({ value, onChange }: ResolutionSliderProps) {
   return (
-    <div className="flex flex-col items-start pt-[0.625rem] px-[0.625rem] bg-[#14161D] rounded-xl gap-[0.938rem]">
+    <div className="flex flex-col items-start h-full pt-[0.625rem] px-[0.625rem] bg-[#14161D] rounded-xl gap-[0.938rem]">
       <p className="text-sm font-semibold text-white">분해도 조절</p>
 
       <div className="flex items-center gap-3">

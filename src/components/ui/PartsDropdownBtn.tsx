@@ -7,13 +7,6 @@ import { getPartList } from "@/api/partApi";
 import { usePartListStore } from "@/store/partStore";
 import PartsMenuContent from "./PartsMenuContent";
 
-export type Part = {
-  id: string;
-  label: string;
-  imgSrc?: string; // 슬롯에 이미지가 있으면 표시
-  onClick: () => void;
-};
-
 type PartsDropdownProps = {
   title?: string; // 버튼 라벨(기본: 구성 부품)
   // parts: Part[]; // 슬롯 데이터
@@ -41,7 +34,7 @@ export default function PartsDropdown({
   const { model } = useDetailModelStore();
   const getParts = async () => {
     if (!model) return;
-    //이미 있으면 또 안 가져오게 (캐시)
+    // 이미 있으면 또 안 가져오게 (캐시)
     if (parts.length > 0) return;
 
     try {

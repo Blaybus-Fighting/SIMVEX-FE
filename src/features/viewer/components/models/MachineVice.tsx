@@ -3,6 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
 import { useMemo } from "react";
+import { usePartStore } from "@/store/partStore";
 
 type ModelProps = ThreeElements["group"] & {
   explode?: number; // 0 ~ 1
@@ -20,20 +21,6 @@ type PartKey =
   | "Spindle"
   | "Rail"
   | "Rail2";
-
-// Parts.ts파일에 있는 id를 Partkey와 매핑해 선택한 부품 일치
-const partIdMap: Record<string, PartKey> = {
-  "Part8-grundplatte": "Base",
-  Part2_Feste_Backe: "FixedJaw",
-  Part4_spindelsockel: "SpindleBase",
-  "Part5-Spannbacke": "MovingJaw",
-  "Part5-Spannbacke001": "MovingJawTop",
-  Part1_Fuhrung: "Guide",
-  "Part3-lose_backe": "LooseJaw",
-  "Part7-TrapezSpindel": "Spindle",
-  "Part6-fuhrungschiene": "Rail",
-  "Part6-fuhrungschiene001": "Rail2",
-};
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -212,25 +199,28 @@ function brassTexture() {
 
 export function MachineVice({
   explode = 0,
-  selectedPart = null,
   url = "/models/Machine Vice.glb",
   ...props
 }: ModelProps & { url?: string }) {
   const { nodes } = useGLTF(url) as unknown as GLTFResult;
+  const { part } = usePartStore();
+
+  const normalize = (s: string) => s.replace(/[^a-zA-Z]/g, "").toUpperCase();
 
   /** 선택 판정 (묶음 규칙 포함) */
   const isSelected = (key: PartKey) => {
-    if (!selectedPart) return true;
+    if (!part) return true;
 
-    const mapped = partIdMap[selectedPart];
-    if (!mapped) return false;
+    const picked = normalize(part.name);
+    const target = normalize(key);
+    console.log(target);
 
-    if (mapped === key) return true;
+    if (picked === target) return true;
 
     // 묶음 규칙
-    if (mapped === "MovingJaw") return key === "MovingJawTop";
+    // if (mapped === "MovingJaw") return key === "MovingJawTop";
 
-    if (mapped === "Rail") return key === "Rail2";
+    // if (mapped === "Rail") return key === "Rail2";
 
     return false;
   };
@@ -255,7 +245,7 @@ export function MachineVice({
     original: THREE.MeshStandardMaterial,
     highlight: THREE.MeshStandardMaterial,
   ) => {
-    if (!selectedPart) return original; // 선택 없음 → 원래 재질
+    if (!part) return original; // 선택 없음 → 원래 재질
     if (isSelected(key)) return highlight; // 선택됨 → 하이라이트
     return ghostMaterial; // 선택 안됨 → 투명
   };
