@@ -22,6 +22,7 @@ export type ModelType = (typeof MODEL_NAMES)[number];
 // 모델 객체
 export interface ModelObject {
   id: number;
+  sessionId: number;
   name: ModelType;
   description: string;
   thumbnailUrl: string;
