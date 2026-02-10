@@ -11,12 +11,14 @@ import { getModelObjects } from "@/api/modelApi";
 
 export default function QuizPage() {
   const location = useLocation();
-  const { models } = useModelStore();
+  const { models, setModels } = useModelStore();
 
   // 현재 페이지가 퀴즈인지 확인 (탭 활성화용)
   const isQuiz = location.pathname.startsWith("/quiz");
 
-  const [selectedMachine, setSelectedMachine] = useState<ModelObject | null>(null);
+  const [selectedMachine, setSelectedMachine] = useState<ModelObject | null>(
+    null,
+  );
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -55,16 +57,20 @@ export default function QuizPage() {
         </Link>
 
         <div className="flex items-center gap-12 h-full">
-          <Link to="/asset"
-                className={`relative h-full flex items-center px-2 text-[18px] font-semibold transition-colors ${!isQuiz ? "text-white" : "text-gray-400 hover:text-gray-200"}`}>
+          <Link
+            to="/asset"
+            className={`relative h-full flex items-center px-2 text-[18px] font-semibold transition-colors ${!isQuiz ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+          >
             학습자료
             {/* 활성화 표시 바 (필요하다면) */}
             {!isQuiz && (
               <span className="absolute bottom-0 left-0 w-full h-[3px] bg-primary-200 rounded-t-full" />
             )}
           </Link>
-          <Link to="/quiz"
-                className={`relative h-full flex items-center px-2 text-[18px] font-semibold transition-colors ${isQuiz ? "text-white" : "text-gray-400 hover:text-gray-200"}`}>
+          <Link
+            to="/quiz"
+            className={`relative h-full flex items-center px-2 text-[18px] font-semibold transition-colors ${isQuiz ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+          >
             퀴즈
             {isQuiz && (
               <span className="absolute bottom-0 left-0 w-full h-[3px] bg-primary-200 rounded-t-full" />
