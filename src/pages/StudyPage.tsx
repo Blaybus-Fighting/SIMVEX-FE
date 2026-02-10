@@ -110,7 +110,7 @@ export default function StudyPage() {
         {/* 노트/AI 패널: 1 비율 */}
         <div className="flex-1 min-w-0">
           {model && (
-            <WorkspacePanel modelId={model.id}/>
+            <WorkspacePanel modelId={model.id} sessionId={model.sessionId}/>
           )}
         </div>
       </div>
