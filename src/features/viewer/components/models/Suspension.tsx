@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
+import { usePartStore } from "@/store/partStore";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -27,16 +28,15 @@ type SuspensionPartKey = "Base" | "NIT" | "NUT" | "ROD" | "SPRING";
 
 type ModelProps = ThreeElements["group"] & {
   explode?: number; // 0~1
-  selectedPart?: string | null; // "Base" | "NIT" | ...
 };
 
 export function Suspension({
   explode = 0,
-  selectedPart = null,
   url = "/models/Suspension.glb",
   ...props
 }: ModelProps & { url?: string }) {
   const { nodes, materials } = useGLTF(url) as unknown as GLTFResult;
+  const { part } = usePartStore(); // 선택한 부품
 
   /** 선택 안 된 파트들에 적용할 고스트 머티리얼 */
   const ghostMaterial = useMemo(
@@ -74,10 +74,18 @@ export function Suspension({
     };
   }, [materials]);
 
+  // 정규화(알파벳만 남기고 대문자)
+  const normalize = (s: string) => s.replace(/[^a-zA-Z]/g, "").toUpperCase();
+
   /* 선택 판정: mesh.name(=partKey) 기준 */
   const isSelected = (key: SuspensionPartKey) => {
-    if (!selectedPart) return true; // 아무것도 선택 안하면 전부 정상 표시
-    return selectedPart === key;
+    if (!part) return true; // 아무것도 선택 안하면 전부 정상 표시
+
+    // 비교를 위해 다 정규화 진행
+    const picked = normalize(part.name);
+    const target = normalize(key);
+
+    return picked === target; // 동일하면 true 반환
   };
 
   /* key에 따라 색상을 결정 */
@@ -86,7 +94,7 @@ export function Suspension({
     original: THREE.MeshStandardMaterial,
     highlight: THREE.MeshStandardMaterial,
   ) => {
-    if (!selectedPart) return original; // 선택 없음 → 원래 재질
+    if (!part) return original; // 선택 없음 → 원래 재질
     if (isSelected(key)) return highlight; // 선택됨 → 하이라이트
     return ghostMaterial; // 선택 안됨 → 투명
   };

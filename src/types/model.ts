@@ -1,4 +1,3 @@
-// src/types/model.ts
 import type { ApiResponse } from "@/api/modelApi";
 
 /**

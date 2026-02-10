@@ -3,6 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
 import { useMemo } from "react";
+import { usePartStore } from "@/store/partStore";
 
 type ModelProps = ThreeElements["group"] & {
   explode?: number; // 0 ~ 1
@@ -20,20 +21,6 @@ type PartKey =
   | "Spindle"
   | "Rail"
   | "Rail2";
-
-// Parts.ts파일에 있는 id를 Partkey와 매핑해 선택한 부품 일치
-const partIdMap: Record<string, PartKey> = {
-  "Part8-grundplatte": "Base",
-  Part2_Feste_Backe: "FixedJaw",
-  Part4_spindelsockel: "SpindleBase",
-  "Part5-Spannbacke": "MovingJaw",
-  "Part5-Spannbacke001": "MovingJawTop",
-  Part1_Fuhrung: "Guide",
-  "Part3-lose_backe": "LooseJaw",
-  "Part7-TrapezSpindel": "Spindle",
-  "Part6-fuhrungschiene": "Rail",
-  "Part6-fuhrungschiene001": "Rail2",
-};
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -57,7 +44,6 @@ function makeCanvasTexture(
   draw: (ctx: CanvasRenderingContext2D) => void,
   opts?: { repeat?: [number, number]; rotation?: number },
 ) {
-  // SSR(Next.js 등) 대비
   if (typeof document === "undefined") {
     const t = new THREE.Texture();
     t.needsUpdate = true;
@@ -212,27 +198,31 @@ function brassTexture() {
 
 export function MachineVice({
   explode = 0,
-  selectedPart = null,
-  url = "/models/Machine Vice.glb",
+  url = "/models/Machine_Vice.glb",
   ...props
 }: ModelProps & { url?: string }) {
   const { nodes } = useGLTF(url) as unknown as GLTFResult;
+  const { part } = usePartStore();
+
+  // 노드 이름
+  const normalizeNodeName = (s: string) =>
+    s
+      .replace(/^Part/i, "") // 앞의 Part 제거
+      .replace(/[-_]/g, "") // - _ 제거
+      .replace(/\s+/g, "") // 공백 제거
+      .toUpperCase();
+
+  // 실제 선택된 부품 이름
+  const normalizePartName = (s: string) => s.replace(/\s+/g, "").toUpperCase();
 
   /** 선택 판정 (묶음 규칙 포함) */
-  const isSelected = (key: PartKey) => {
-    if (!selectedPart) return true;
+  const isSelected = (nodeName: string) => {
+    if (!part) return true;
 
-    const mapped = partIdMap[selectedPart];
-    if (!mapped) return false;
+    const picked = normalizePartName(part.name);
+    const target = normalizeNodeName(nodeName);
 
-    if (mapped === key) return true;
-
-    // 묶음 규칙
-    if (mapped === "MovingJaw") return key === "MovingJawTop";
-
-    if (mapped === "Rail") return key === "Rail2";
-
-    return false;
+    return picked === target;
   };
 
   /** 투명 material */
@@ -249,15 +239,14 @@ export function MachineVice({
     [],
   );
 
-  /** material 선택 로직 */
   const mat = (
-    key: PartKey,
+    nodeName: string,
     original: THREE.MeshStandardMaterial,
     highlight: THREE.MeshStandardMaterial,
   ) => {
-    if (!selectedPart) return original; // 선택 없음 → 원래 재질
-    if (isSelected(key)) return highlight; // 선택됨 → 하이라이트
-    return ghostMaterial; // 선택 안됨 → 투명
+    if (!part) return original;
+    if (isSelected(nodeName)) return highlight;
+    return ghostMaterial;
   };
 
   /** 사진 스타일 재질/텍스처 */
@@ -397,7 +386,7 @@ export function MachineVice({
       {/* 목재 베이스 */}
       <mesh
         geometry={nodes["Part8-grundplatte"].geometry}
-        material={mat("Base", mats.wood, highlighted.wood)}
+        material={mat("Part8-grundplatte", mats.wood, highlighted.wood)}
         position={pos("Base")}
         rotation={[Math.PI / 2, 0, 0]}
         scale={0.1}
@@ -406,7 +395,7 @@ export function MachineVice({
       {/* 고정 죠(거친 주물) */}
       <mesh
         geometry={nodes.Part2_Feste_Backe.geometry}
-        material={mat("FixedJaw", mats.castIron, highlighted.castIron)}
+        material={mat("Part2_Feste_Backe", mats.castIron, highlighted.castIron)}
         position={pos("FixedJaw")}
         rotation={[0, -Math.PI / 2, 0]}
         scale={0.1}
@@ -424,7 +413,11 @@ export function MachineVice({
       {/* 이동 블록(검정 도장 느낌) */}
       <mesh
         geometry={nodes["Part5-Spannbacke"].geometry}
-        material={mat("MovingJaw", mats.paintedBlack, highlighted.paintedBlack)}
+        material={mat(
+          "Part5-Spannbacke",
+          mats.paintedBlack,
+          highlighted.paintedBlack,
+        )}
         position={pos("MovingJaw")}
         rotation={[0, -Math.PI / 2, 0]}
         scale={0.1}
@@ -434,7 +427,7 @@ export function MachineVice({
       <mesh
         geometry={nodes["Part5-Spannbacke001"].geometry}
         material={mat(
-          "MovingJawTop",
+          "Part5-Spannbacke001",
           mats.machinedGray,
           highlighted.machinedGray,
         )}
@@ -446,7 +439,11 @@ export function MachineVice({
       {/* 가이드(회색 가공 메탈) */}
       <mesh
         geometry={nodes.Part1_Fuhrung.geometry}
-        material={mat("Guide", mats.machinedGray, highlighted.machinedGray)}
+        material={mat(
+          "Part1_Fuhrung",
+          mats.machinedGray,
+          highlighted.machinedGray,
+        )}
         position={pos("Guide")}
         rotation={[-Math.PI / 2, 0, 0]}
         scale={0.1}
@@ -455,7 +452,7 @@ export function MachineVice({
       {/* 이동 죠(거친 주물) */}
       <mesh
         geometry={nodes["Part3-lose_backe"].geometry}
-        material={mat("LooseJaw", mats.castIron, highlighted.castIron)}
+        material={mat("Part3-lose_backe", mats.castIron, highlighted.castIron)}
         position={pos("LooseJaw")}
         rotation={[0, -Math.PI / 2, 0]}
         scale={0.1}
@@ -464,7 +461,7 @@ export function MachineVice({
       {/* 스핀들(황동) */}
       <mesh
         geometry={nodes["Part7-TrapezSpindel"].geometry}
-        material={mat("Spindle", mats.brass, highlighted.brass)}
+        material={mat("Part7-TrapezSpindel", mats.brass, highlighted.brass)}
         position={pos("Spindle")}
         rotation={[2.321, Math.PI / 2, 0]}
         scale={0.12}
@@ -473,7 +470,11 @@ export function MachineVice({
       {/* 레일/바디(검정 도장) */}
       <mesh
         geometry={nodes["Part6-fuhrungschiene"].geometry}
-        material={mat("Rail", mats.paintedBlack, highlighted.paintedBlack)}
+        material={mat(
+          "Part6-fuhrungschiene",
+          mats.paintedBlack,
+          highlighted.paintedBlack,
+        )}
         position={pos("Rail")}
         rotation={[-Math.PI / 2, 0, 0]}
         scale={0.1}
@@ -481,7 +482,11 @@ export function MachineVice({
 
       <mesh
         geometry={nodes["Part6-fuhrungschiene001"].geometry}
-        material={mat("Rail2", mats.paintedBlack, highlighted.paintedBlack)}
+        material={mat(
+          "Part6-fuhrungschiene001",
+          mats.paintedBlack,
+          highlighted.paintedBlack,
+        )}
         position={pos("Rail2")}
         rotation={[Math.PI / 2, 0, 0]}
         scale={0.1}
@@ -490,4 +495,4 @@ export function MachineVice({
   );
 }
 
-useGLTF.preload("/models/Machine Vice.glb");
+useGLTF.preload("/models/Machine_Vice.glb");
