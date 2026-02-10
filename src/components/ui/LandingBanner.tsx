@@ -1,6 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
+import MmmImg from "@/assets/images/banner/mmm.png";
+import PppImg from "@/assets/images/banner/ppp.png";
+import AaaImg from "@/assets/images/banner/aaa.png";
+import QqqImg from "@/assets/images/banner/qqq.png";
 
 type Banner = {
   id: string;
@@ -10,10 +14,10 @@ type Banner = {
 };
 
 const BANNERS: Banner[] = [
-  { id: "b1", href: "#", alt: "Banner 1" },
-  { id: "b2", href: "#", alt: "Banner 2" },
-  { id: "b3", href: "#", alt: "Banner 3" },
-  { id: "b4", href: "#", alt: "Banner 4" },
+  {id: "b1", href: "#", src: MmmImg, alt: "Banner 1"},
+  {id: "b2", href: "#", src: PppImg, alt: "Banner 2"},
+  {id: "b3", href: "#", src: AaaImg, alt: "Banner 3"},
+  {id: "b4", href: "#", src: QqqImg, alt: "Banner 4"},
 ];
 
 export default function LandingBanner() {
@@ -47,12 +51,12 @@ export default function LandingBanner() {
               className="flex h-full w-full flex-col overflow-hidden rounded-xl
                bg-background-400 border border-[#2B3041]"
             >
-              {/* <img
-                src={b.src ?? "/placeholder.png"}
+              <img
+                src={b.src}
                 alt={b.alt}
-                className="h-[140px] w-full object-cover"
+                className="h-full w-full object-cover"
                 draggable={false}
-              /> */}
+              />
             </a>
           </SwiperSlide>
         ))}
