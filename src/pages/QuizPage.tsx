@@ -7,6 +7,7 @@ import SearchIcon from "@/assets/icons/search.svg?react";
 import { useModelStore } from "@/store/modelStore";
 import type { ModelObject } from "@/types/model";
 import QuizModal from "@/components/quiz/QuizModal";
+import { getModelObjects } from "@/api/modelApi";
 
 export default function QuizPage() {
   const location = useLocation();
@@ -15,11 +16,8 @@ export default function QuizPage() {
   // 현재 페이지가 퀴즈인지 확인 (탭 활성화용)
   const isQuiz = location.pathname.startsWith("/quiz");
 
-  const {models, setModels} = useModelStore();
-
   const [selectedMachine, setSelectedMachine] = useState<ModelObject | null>(null);
   const [open, setOpen] = useState(false);
-  const [selectedMachine, setSelectedMachine] = useState<ModelObject>();
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -39,6 +37,13 @@ export default function QuizPage() {
     };
     fetchModelObjects();
   }, [models.length, setModels]);
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      console.log("검색어:", query);
+      // TODO: 검색 로직
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-screen bg-background-400 overflow-hidden">
