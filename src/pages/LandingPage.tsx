@@ -11,51 +11,67 @@ import UserMenu from "@/components/common/UserMenu";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams(); // URL 파라미터 훅
+  const [searchParams] = useSearchParams();
   const login = useAuthStore((state) => state.login);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 로그인 상태 구독
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-// 1. 로그인 프로세스 (티켓 교환)
   useEffect(() => {
-    // URL에서 ticket 값을 찾습니다.
-    const ticket = searchParams.get("ticket");
+    // 1. URL에서 티켓 확인하기
+    let ticket = searchParams.get("ticket");
 
-    // 티켓이 없으면 아무것도 안 함 (그냥 랜딩페이지 접속한 경우)
-    if (!ticket) return;
+    // URL에 없으면? 세션스토리지 찾기
+    if (!ticket) {
+      ticket = sessionStorage.getItem("oauth_ticket");
+    }
 
-    // 중복 호출 방지 (잠금)
+    console.log("[LandingPage] 현재 URL:", window.location.href);
+    console.log("[LandingPage] 최종 발견된 티켓:", ticket);
+
+    if (!ticket) {
+      console.log("티켓이 없습니다. (URL에도 없고, 세션스토리지에도 없음)");
+      return;
+    }
+
+    // 이미 교환 시도 중인 티켓인지 확인 (중복 방지)
     const lockKey = `exchange_lock_${ticket}`;
     if (sessionStorage.getItem(lockKey)) return;
     sessionStorage.setItem(lockKey, "1");
 
     (async () => {
       try {
-        console.log("🎟️ 티켓 발견! 교환 시작:", ticket);
+        console.log("[API] 토큰 교환 요청 시작...");
 
         // 티켓으로 진짜 토큰 받아오기
         const res = await api.post("/auth/exchange", {ticket});
 
+        console.log("[API] 응답 도착:", res);
+
         if (res.status === 200 && res.data.data) {
           const {accessToken, user} = res.data.data;
 
-          console.log("✅ 로그인 성공! 유저 정보:", user);
+          console.log("[로그인 성공] 사용자 정보:", user);
 
-          // 스토어에 저장 (이제 헤더에 프로필 뜸)
+          // 스토어 업데이트
           login(accessToken, user);
 
-          // URL에 남은 티켓 파라미터 지우기 (깔끔하게)
-          navigate("/", {replace: true});
+          // 사용한 티켓 및 락 제거
+          sessionStorage.removeItem("oauth_ticket"); // 세션에 있던 것도 지워주기
+          sessionStorage.removeItem(lockKey);
+
+          // 성공 후 이동
+          navigate("/asset", {replace: true});
+        } else {
+          console.error("[API 오류] 응답 상태가 200이 아닙니다:", res.status);
         }
       } catch (e) {
-        console.error("🚨 토큰 교환 실패:", e);
-        // 실패하면 그냥 조용히 실패 처리 (재로그인 유도)
+        console.error("[에러] 토큰 교환 중 예외 발생:", e);
       } finally {
         sessionStorage.removeItem(lockKey);
       }
     })();
-  }, [searchParams, navigate, login]); // 의존성 배열 수정
+  }, [searchParams, navigate, login]);
 
   // 2. 학습하기 버튼 클릭 핸들러
   const handleStartClick = () => {
@@ -69,7 +85,7 @@ export default function LandingPage() {
 
   return (
     // 전체 배경색 설정
-    <div className="flex flex-col w-full h-screen bg-[#0f172a] overflow-hidden relative">
+    <div className="flex h-full flex-col overflow-hidden relative">
 
       {/* 1. 헤더 조립 */}
       <HeaderFrame className="bg-transparent border-none text-white z-50">
