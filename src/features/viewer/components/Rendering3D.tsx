@@ -4,6 +4,7 @@ import PartsDropdown from "@/components/ui/PartsDropdownBtn";
 import { ResolutionSlider } from "@/components/ui/ResolutionSlider";
 import ExplodeViewer from "@/features/viewer/components/ExplodeViewer";
 import type { ModelType } from "@/types/model";
+import { HelpTooltip } from "./HelpToolTip";
 
 type Rendering3DProps = {
   modelName: ModelType; // 허용된 모델 이름만 받아야 함
@@ -35,7 +36,8 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
         <ExplodeViewer explode={explode} url={modelUrlMap[modelName]} />
       </div>
 
-      <section className="flex justify-end">
+      <section className="flex justify-between">
+        <HelpTooltip />
         <ResolutionSlider value={explodePct} onChange={setExplodePct} />
       </section>
     </div>

@@ -9,8 +9,8 @@ import { useDetailModelStore } from "@/store/modelStore";
 import Rendering3D from "@/features/viewer/components/Rendering3D";
 import { usePartListStore, usePartStore } from "@/store/partStore";
 import HeaderFrame from "@/components/layout/HeaderFrame";
-import ArrowBack from "@assets/icons/arrow_back.svg?react";
-import UserMenu from "@components/common/UserMenu.tsx";
+import ArrowBack from "@/assets/icons/arrow_back.svg?react";
+import UserMenu from "@/components/common/UserMenu";
 
 export default function StudyPage() {
   const navigate = useNavigate();
@@ -109,7 +109,9 @@ export default function StudyPage() {
 
         {/* 노트/AI 패널: 1 비율 */}
         <div className="flex-1 min-w-0">
-          <WorkspacePanel/>
+          {model && (
+            <WorkspacePanel modelId={model.id}/>
+          )}
         </div>
       </div>
     </div>
