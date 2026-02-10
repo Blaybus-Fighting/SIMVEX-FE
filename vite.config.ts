@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
-        "/oauth2": env.AUTH_API_URL,
+        "/oauth2": env.LOGIN_API_URL,
       },
       // host: true, // 0.0.0.0로 열기 (네트워크 접속 허용)
       // strictPort: true,
