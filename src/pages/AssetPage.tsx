@@ -1,12 +1,15 @@
 import Dropdown from "@/components/ui/DropdownBtn";
-import Header from "@components/ui/Header";
 import ThreeDObjectCard from "@components/ui/3DObjectCard";
 import { useEffect, useState } from "react";
 import { getModelObjects } from "@/api/modelApi";
 import { useModelStore } from "@store/modelStore";
+import HeaderFrame from "@/components/layout/HeaderFrame";
+import UserMenu from "@/components/common/UserMenu";
+import Logo from "@assets/icons/logo.svg?react";
+import { Link } from "react-router-dom";
 
 export default function AssetPage() {
-  const { models, setModels } = useModelStore();
+  const {models, setModels} = useModelStore();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,11 +35,29 @@ export default function AssetPage() {
   }, [setModels]);
 
   return (
-    <div>
-      {/* 상단바 */}
-      <header className="border-b border-background-100">
-        <Header type="asset" title="asset" />
-      </header>
+    // 전체 레이아웃을 flex-col로 잡아서 헤더는 고정, 메인은 스크롤되게 설정
+    <div className="flex flex-col w-full h-screen">
+
+      {/* 1. 헤더 조립 */}
+      <HeaderFrame>
+        {/* 왼쪽: 로고 */}
+        <Link to="/" className="flex items-center gap-2">
+          <Logo className="w-30 h-30"/>
+          <span className="text-xl font-bold text-gray-800">MY ASSETS</span>
+        </Link>
+
+        {/* 가운데: 검색창 (간단 예시) */}
+        <div className="hidden md:block flex-1 max-w-lg mx-8">
+          <input
+            type="text"
+            placeholder="모델 검색..."
+            className="w-full px-4 py-2 bg-background-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary-100"
+          />
+        </div>
+
+        {/* 오른쪽: 유저 메뉴 */}
+        <UserMenu/>
+      </HeaderFrame>
 
       {/* 내용 영역 */}
       <main className="pt-10">
@@ -47,8 +68,8 @@ export default function AssetPage() {
             buttonLabel="최신 편집 순"
             left={false}
             items={[
-              { label: "최신 편집 순", onClick: () => alert("배경색1 선택") },
-              { label: "가나다순", onClick: () => alert("배경색2 선택") },
+              {label: "최신 편집 순", onClick: () => alert("배경색1 선택")},
+              {label: "가나다순", onClick: () => alert("배경색2 선택")},
             ]}
           />
         </section>
