@@ -86,7 +86,7 @@ type PartKey =
 
 export function RobotGripper({
   explode = 0,
-  url = "/models/Robot Gripper.glb",
+  url = "/models/Robot_Gripper.glb",
   ...props
 }: ModelProps & { url?: string }) {
   const { nodes, materials } = useGLTF(url) as unknown as GLTFResult;
@@ -534,4 +534,4 @@ export function RobotGripper({
   );
 }
 
-useGLTF.preload("/models/Robot Gripper.glb");
+useGLTF.preload("/models/Robot_Gripper.glb");

@@ -16,9 +16,9 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
   const explode = explodePct / 100;
 
   const modelUrlMap: Record<string, string> = {
-    "Robot-Gripper": "/models/Robot Gripper.glb",
+    "Robot-Gripper": "/models/Robot_Gripper.glb",
     Suspension: "/models/Suspension.glb",
-    "Machine-Vice": "/models/MachineVice.glb",
+    "Machine-Vice": "/models/Machine_Vice.glb",
   };
 
   return (
