@@ -7,6 +7,7 @@ import { getDetailModel } from "@/api/modelApi";
 import ApiLoadingBar from "@/components/common/ApiLoadingBar";
 import { useDetailModelStore } from "@/store/modelStore";
 import Rendering3D from "@/features/viewer/components/Rendering3D";
+import { usePartListStore, usePartStore } from "@/store/partStore";
 import HeaderFrame from "@/components/layout/HeaderFrame";
 import ArrowBack from "@assets/icons/arrow_back.svg?react";
 import UserMenu from "@components/common/UserMenu.tsx";
@@ -14,10 +15,21 @@ import UserMenu from "@components/common/UserMenu.tsx";
 export default function StudyPage() {
   const navigate = useNavigate();
   const {model, setModel} = useDetailModelStore();
+  const clearPartList = usePartListStore((state) => state.clear);
+  const clearPart = usePartStore((state) => state.clear);
   const [loading, setLoading] = useState(false);
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const modelId = Number(searchParams.get("modelId"));
+
+  // 페이지 나갈 때 parts와 part 초기화
+  useEffect(() => {
+    return () => {
+      clearPartList();
+      clearPart();
+      setSelectedPart(null);
+    };
+  }, [clearPartList, clearPart]);
 
   useEffect(() => {
     // 모델 객체 상세 조회

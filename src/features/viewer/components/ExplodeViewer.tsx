@@ -4,16 +4,36 @@ import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 // import * as THREE from "three";
 // import { Suspension } from "./models/Suspension";
 import { MachineVice } from "./models/MachineVice";
+import { useDetailModelStore } from "@/store/modelStore";
+import { RobotGripper } from "./models/RobotGripper";
+import { Suspension } from "./models/Suspension";
 // import { RobotGlipper } from "./models/RobotGlippers";
 // import { RobotGlipper } from "./models/RobotGlippers";
 
 type Props = {
   explode: number; // 0~1
   url: string;
-  selectedPart: string | null;
 };
 
-export default function ExplodeViewer({ explode, url, selectedPart }: Props) {
+// ComponentType에 props 지정(모델.tsx props로 만들기 때문에 동일하게 지정)
+type ModelProps = {
+  explode?: number;
+};
+
+type ModelComponent = React.ComponentType<ModelProps>;
+
+const MODEL_COMPONENT_MAP: Record<string, ModelComponent> = {
+  "Robot-Gripper": RobotGripper,
+  Suspension: Suspension,
+  "Machine-Vice": MachineVice,
+  // "V4-Engine": V4Engine
+};
+
+export default function ExplodeViewer({ explode, url }: Props) {
+  const { model } = useDetailModelStore();
+
+  const SelectedModel = model?.name ? MODEL_COMPONENT_MAP[model.name] : null;
+
   useEffect(() => {
     if (url) useGLTF.preload(url);
   }, [url]);
@@ -49,9 +69,7 @@ export default function ExplodeViewer({ explode, url, selectedPart }: Props) {
         {/* HDRI 환경광(선택). 없어도 됨 */}
         <Environment preset="warehouse" />
 
-        {/* <RobotGlipper explode={explode} selectedPart={selectedPart} /> */}
-        {/* <Suspension explode={explode} selectedPart={selectedPart} /> */}
-        <MachineVice explode={explode} selectedPart={selectedPart} />
+        {SelectedModel && <SelectedModel explode={explode} />}
       </Suspense>
 
       {/* 마우스 회전/줌 */}
