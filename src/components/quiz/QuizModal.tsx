@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
-import GearCharacter from "@/components/quiz/GearCharacter";
+
+// ✅ AI 아이콘 (이미 있는 자산 사용)
+import AiLogo from "@/assets/icons/ai_logo.svg?react";
 
 interface Question {
   question: string;
@@ -94,6 +96,14 @@ export default function QuizModal({
     setIndex((v) => v + 1);
   };
 
+  // ✅ 점수별 멘트
+  const resultMessage =
+    correctCount <= 2
+      ? "다시 한 번 도전해볼까요?"
+      : correctCount <= 4
+      ? "조금만 더 보완하면 만점이에요."
+      : "모든 개념을 완벽히 이해하셨군요!";
+
   return (
     <div className="fixed inset-0 z-50 bg-black">
       {/* ===== 헤더 ===== */}
@@ -128,16 +138,17 @@ export default function QuizModal({
         {finished ? (
           /* ===== 결과 화면 ===== */
           <div className="flex min-h-[65vh] flex-col items-center justify-center text-center">
-            {/* ✅ GearCharacter 사용 */}
+            {/* ✅ AI 아이콘 */}
             <div className="mb-10">
-              <GearCharacter size={180} />
+              <AiLogo className="h-36 w-36" />
             </div>
 
             <p className="text-white text-[30px] font-semibold">
               {QUESTIONS.length}문제 중 {correctCount}문제를 맞혔어요.
             </p>
+
             <p className="mt-3 text-gray-300 text-[18px]">
-              다시 한 번 도전해볼까요?
+              {resultMessage}
             </p>
 
             <div className="mt-12 flex gap-6">
