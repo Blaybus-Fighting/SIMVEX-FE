@@ -2,21 +2,22 @@
 import { useEffect, useState } from "react";
 import MachinePanel from "@/features/machine/MachinePanel.tsx";
 import { WorkspacePanel } from "@/features/panels/workspace/WorkspacePanel";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getDetailModel } from "@/api/modelApi";
 import ApiLoadingBar from "@/components/common/ApiLoadingBar";
 import { useDetailModelStore } from "@/store/modelStore";
 import Rendering3D from "@/features/viewer/components/Rendering3D";
+import HeaderFrame from "@/components/layout/HeaderFrame";
+import ArrowBack from "@assets/icons/arrow_back.svg?react";
+import UserMenu from "@components/common/UserMenu.tsx";
 
 export default function StudyPage() {
-  const { model, setModel } = useDetailModelStore();
-
+  const navigate = useNavigate();
+  const {model, setModel} = useDetailModelStore();
   const [loading, setLoading] = useState(false);
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
-
-  const [searchParams] = useSearchParams(); // query string 방식: 새로고침 후에도 값 유지됨
-
-  const modelId = Number(searchParams.get("modelId")); // modelId 가져오기
+  const [searchParams] = useSearchParams();
+  const modelId = Number(searchParams.get("modelId"));
 
   useEffect(() => {
     // 모델 객체 상세 조회
@@ -45,29 +46,59 @@ export default function StudyPage() {
   if (loading) {
     return (
       <>
-        <ApiLoadingBar loading />
+        <ApiLoadingBar loading/>
       </>
     );
   }
 
   return (
-    <div className="flex w-full h-full bg-[#0f172a] p-2 gap-4 overflow-hidden">
-      {model && <Rendering3D modelName={model.name} />}
+    // 전체 화면, 배경 어둡게
+    <div className="flex flex-col w-full h-screen overflow-hidden">
 
-      {/* 3D 영역: flex-[1.8]으로 더 넓게 차지 */}
-      <div className="flex-[1.8] min-w-0 bg-slate-900/50 rounded-xl border border-white/5" />
+      {/* 1. 헤더 조립 (다크 모드 커스텀) */}
+      <HeaderFrame className="bg-background-300 border-slate-700 text-white h-14 min-h-[3.5rem] relative">
 
-      {/* 기계/부품 영역: flex-1 */}
-      <div className="flex-1 min-w-0">
-        <MachinePanel
-          selectedPart={selectedPart}
-          onPartSelect={setSelectedPart}
-        />
-      </div>
+        {/* 왼쪽: 뒤로가기 */}
+        <div className="flex items-center gap-4 z-10">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 hover:bg-slate-700 rounded-full transition-colors"
+          >
+            <ArrowBack className="w-5 h-5 fill-white"/>
+          </button>
+        </div>
 
-      {/* 워크스페이스 영역: flex-1 */}
-      <div className="flex-1 min-w-0">
-        <WorkspacePanel />
+        {/* 중앙: 기계 이름 (절대 위치로 중앙 정렬) */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <span className="font-semibold text-lg">
+            {model?.name || "기계 이름"}
+          </span>
+        </div>
+
+        {/* 오른쪽: 저장/옵션 버튼 */}
+        <div className="flex items-center gap-2 z-10">
+          <UserMenu/>
+        </div>
+      </HeaderFrame>
+
+      {/* 2. 작업 영역 (3D + 패널) */}
+      {/* 부모 flex-1로 변경하여 남은 공간 채움 */}
+      <div className="flex flex-1 p-2 gap-2 overflow-hidden">
+
+        {/* 3D 뷰어 영역: 1.5 비율 (flex-[1.5]) */}
+        <div className="flex-[1.5] min-w-0 relative bg-slate-900/50 rounded-xl border border-white/5 overflow-hidden">
+          {model && <Rendering3D modelName={model.name}/>}
+        </div>
+
+        {/* 기계/부품 패널: 1 비율 */}
+        <div className="flex-1 min-w-0">
+          <MachinePanel selectedPart={selectedPart} onPartSelect={setSelectedPart}/>
+        </div>
+
+        {/* 노트/AI 패널: 1 비율 */}
+        <div className="flex-1 min-w-0">
+          <WorkspacePanel/>
+        </div>
       </div>
     </div>
   );
