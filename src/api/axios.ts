@@ -8,9 +8,9 @@ import { triggerAuthErrorEvent } from "@/utils/authEvent";
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
   timeout: 5000,
-  headers: { "Content-Type": "application/json" },
+  headers: {"Content-Type": "application/json"},
 
-  // ✅ 쿠키 기반이면 이게 핵심
+  // 쿠키 기반이면 이게 핵심
   withCredentials: true,
 });
 

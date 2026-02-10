@@ -12,7 +12,7 @@ interface NoteListProps {
   onNoteClick: (note: Note) => void;
 }
 
-export function NoteList({notes, onDelete, onWriteClick}: NoteListProps) {
+export function NoteList({notes, onDelete, onWriteClick, onNoteClick}: NoteListProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -99,8 +99,12 @@ export function NoteList({notes, onDelete, onWriteClick}: NoteListProps) {
                 isEditMode={isEditMode}
                 isSelected={selectedIds.includes(note.id)}
                 onClick={() => {
-                  if (isEditMode) handleSelect(note.id);
-                  else { /* 상세보기 로직 */
+                  if (isEditMode) {
+                    // 편집 모드일 땐 선택/해제
+                    handleSelect(note.id);
+                  } else {
+                    // 일반 모드일 땐 부모(NoteTab)에게 "나 이거 볼래"라고 알림
+                    onNoteClick(note);
                   }
                 }}
               />
