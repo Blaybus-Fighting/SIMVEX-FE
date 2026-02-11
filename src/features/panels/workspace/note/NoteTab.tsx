@@ -8,7 +8,7 @@ interface NoteTabProps {
   sessionId: number; // = modelId (기계 ID)
 }
 
-export function NoteTab({sessionId}: NoteTabProps) {
+export function NoteTab({ sessionId }: NoteTabProps) {
   const [view, setView] = useState<"LIST" | "EDITOR">("LIST");
   const [notes, setNotes] = useState<Note[]>([]);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
@@ -62,7 +62,7 @@ export function NoteTab({sessionId}: NoteTabProps) {
   // 3. 노트 저장 (생성/수정)
   const handleSave = async (title: string, content: string) => {
     // 백엔드는 content 필드 하나뿐이므로, title과 묶어서 JSON으로 저장
-    const payload = JSON.stringify({title, content});
+    const payload = JSON.stringify({ title, content });
 
     try {
       if (editingNote) {
