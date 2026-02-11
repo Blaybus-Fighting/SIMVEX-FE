@@ -258,7 +258,7 @@ export default function ExplodeViewer({
         minPolarAngle={0.2}
         maxPolarAngle={Math.PI - 0.2}
         onChange={markDirtyAndScheduleSave}
-        onEnd={flushSave}
+        onEnd={markDirtyAndScheduleSave}
       />
     </Canvas>
   );
