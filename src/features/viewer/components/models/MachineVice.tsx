@@ -207,9 +207,9 @@ export function MachineVice({
   // 노드 이름
   const normalizeNodeName = (s: string) =>
     s
-      .replace(/^Part\d*/i, "") // 앞의 Part + 바로 붙는 숫자 제거
       .replace(/[-_]/g, "") // - _ 제거
       .replace(/\s+/g, "") // 공백 제거
+      .replace(/^Part\d*/i, "") // 앞의 Part + 바로 붙는 숫자 제거
       .toUpperCase();
 
   // 실제 선택된 부품 이름
