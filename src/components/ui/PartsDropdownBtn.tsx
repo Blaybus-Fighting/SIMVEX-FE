@@ -66,6 +66,7 @@ export default function PartsDropdown({
               />
             </MenuButton>
 
+            {/* 구성 부품들 */}
             <PartsMenuContent
               open={open}
               parts={parts}

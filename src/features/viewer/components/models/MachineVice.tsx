@@ -207,13 +207,17 @@ export function MachineVice({
   // 노드 이름
   const normalizeNodeName = (s: string) =>
     s
-      .replace(/^Part/i, "") // 앞의 Part 제거
+      .replace(/^Part\d*/i, "") // 앞의 Part + 바로 붙는 숫자 제거
       .replace(/[-_]/g, "") // - _ 제거
       .replace(/\s+/g, "") // 공백 제거
       .toUpperCase();
 
   // 실제 선택된 부품 이름
-  const normalizePartName = (s: string) => s.replace(/\s+/g, "").toUpperCase();
+  const normalizePartName = (s: string) =>
+    s
+      .replace(/\(.*?\)/g, "") // 괄호 안 내용 포함 제거
+      .replace(/\s+/g, "") // 공백 제거
+      .toUpperCase();
 
   /** 선택 판정 (묶음 규칙 포함) */
   const isSelected = (nodeName: string) => {
