@@ -1,4 +1,9 @@
-import type { ApiResponse } from "@/api/sessionApi";
+// 공통 API 응답값 형태
+export interface ApiResponse<T> {
+  isSuccess: boolean;
+  data: T;
+  error: { code: string; message: string };
+}
 
 export interface ViewData {
   camera: {

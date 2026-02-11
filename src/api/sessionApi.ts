@@ -1,13 +1,6 @@
 import type { sessionResponse, ViewData } from "@/types/session";
 import api from "./axios";
 
-// 공통 API 응답값 형태
-export interface ApiResponse<T> {
-  isSuccess: boolean;
-  data: T;
-  error: { code: string; message: string };
-}
-
 // 세션 업데이트
 export const putSession = async (
   modelId: number,

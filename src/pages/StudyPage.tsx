@@ -13,7 +13,7 @@ import ArrowBack from "@/assets/icons/arrow_back.svg?react";
 import UserMenu from "@/components/common/UserMenu";
 import { getSession, putSession } from "@/api/sessionApi";
 import type { ViewData } from "@/types/session";
-import { useExplodeStore, useViewDataStore } from "@/store/sessionStore";
+import { useViewDataStore } from "@/store/sessionStore";
 
 export default function StudyPage() {
   const navigate = useNavigate();
@@ -36,7 +36,6 @@ export default function StudyPage() {
 
   // zustand 상태 저장
   const { setViewData } = useViewDataStore();
-  const { setExplode } = useExplodeStore();
 
   useEffect(() => {
     const fetchDetailModel = async () => {
@@ -97,7 +96,6 @@ export default function StudyPage() {
 
           // 초기 viewData도 state에 주입
           setViewData(initialViewData);
-          setExplode(initialViewData.explode);
           return;
         }
 
@@ -107,9 +105,7 @@ export default function StudyPage() {
         console.log("세션 로드 성공:", parsedViewData);
 
         // 5) 세션에 viewData가 있으면 파싱해서 state에 주입
-        const parsed = JSON.parse(sessionRes.data.viewData) as ViewData;
-        setViewData(parsed);
-        setExplode(parsed.explode);
+        setViewData(parsedViewData);
       } catch (error) {
         console.error("모델 객체 API 에러:", error);
       } finally {
