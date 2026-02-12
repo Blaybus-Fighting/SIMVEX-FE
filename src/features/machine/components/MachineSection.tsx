@@ -6,7 +6,7 @@ interface SectionProps {
   defaultExpanded?: boolean;
 }
 
-export default function MachineSection({title, children}: SectionProps) {
+export default function MachineSection({ title, children }: SectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -14,7 +14,7 @@ export default function MachineSection({title, children}: SectionProps) {
       {/* 제목 + 얇은 라인 */}
       <div className="mb-4 text-left">
         <h3 className="text-gray-100 font-bold text-text-1 mb-3">{title}</h3>
-        <div className="h-[1px] bg-white/5 w-full"/>
+        <div className="h-[1px] bg-white/5 w-full" />
       </div>
 
       {/* 본문: 펼치기 전에는 max-height로 2~3줄 정도만 노출 */}
@@ -34,7 +34,9 @@ export default function MachineSection({title, children}: SectionProps) {
         className="mt-3 w-full py-2 flex items-center justify-center gap-2 text-gray-300 hover:text-gray-300 transition-colors text-[13px]"
       >
         <span>{isExpanded ? "접기" : "펼치기"}</span>
-        <span className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}>
+        <span
+          className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+        >
           ▼
         </span>
       </button>

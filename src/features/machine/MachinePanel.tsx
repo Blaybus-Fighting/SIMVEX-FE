@@ -3,14 +3,11 @@ import { PanelLayout } from "@/components/layout/PanelLayout.tsx"; // 경로에 
 import { TabSwitcher } from "@/components/ui/TabSwitcher.tsx";
 import MachineContent from "./MachineContent.tsx";
 import PartContent from "./PartContent.tsx";
+import { usePartStore } from "@/store/partStore.ts";
 
-interface MachinePanelProps {
-  selectedPart: string | null;
-  onPartSelect: (id: string | null) => void;
-}
-
-export default function MachinePanel({selectedPart, onPartSelect}: MachinePanelProps) {
+export default function MachinePanel() {
   const [activeTab, setActiveTab] = useState<"LEFT" | "RIGHT">("LEFT");
+  const { part } = usePartStore(); // 선택한 부품
 
   return (
     <PanelLayout
@@ -23,16 +20,11 @@ export default function MachinePanel({selectedPart, onPartSelect}: MachinePanelP
         />
       }
     >
-      
       <div className="w-full h-full overflow-hidden relative">
-
         {activeTab === "LEFT" ? (
-          <MachineContent/>
+          <MachineContent />
         ) : (
-          <PartContent
-            selectedPart={selectedPart}
-            onPartSelect={onPartSelect}
-          />
+          <PartContent selectedPart={part} />
         )}
       </div>
     </PanelLayout>
