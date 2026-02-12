@@ -3,7 +3,7 @@ import AiSummaryIcon from "@/assets/icons/ai_summary.svg?react";
 import { Input } from "@headlessui/react";
 
 type AIProps = {
-  type: string;
+  type: "machine" | "part";
 };
 
 export default function AiSummaryCard({ type }: AIProps) {

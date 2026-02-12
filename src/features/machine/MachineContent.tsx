@@ -1,6 +1,7 @@
 import MachineSection from "./components/MachineSection.tsx";
 import AiSummaryCard from "./components/AiSummaryCard.tsx";
 import type { ModelObject } from "@/types/model.ts";
+import { useMemo } from "react";
 
 interface Props {
   selectedModel: ModelObject | null;
@@ -34,8 +35,11 @@ function parseTheory(text: string | null): theoryItem[] {
 }
 
 export default function MachineContent({ selectedModel }: Props) {
-  const theories = parseTheory(selectedModel?.mainTheory ?? "");
-
+  const theories = useMemo(
+    // 결과를 메모이제이션하기 위해 사용
+    () => parseTheory(selectedModel?.mainTheory ?? ""),
+    [selectedModel?.mainTheory],
+  );
   return (
     // 전체 스크롤 적용 (h-full 필수)
     <div className="h-full overflow-y-auto custom-scrollbar p-1 pr-2 pb-10">
@@ -56,8 +60,8 @@ export default function MachineContent({ selectedModel }: Props) {
                 해당 모델의 이론이 없습니다.
               </p>
             ) : (
-              theories.map((t) => (
-                <div key={t.num}>
+              theories.map((t, index) => (
+                <div key={`${t.num}-${index}`}>
                   <p className="font-bold text-gray-100 text-text-3 mb-1">
                     {t.num}. {t.title}
                   </p>
