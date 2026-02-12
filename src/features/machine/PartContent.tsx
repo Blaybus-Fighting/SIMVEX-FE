@@ -21,7 +21,7 @@ export default function PartContent({ selectedPart }: Props) {
     <div className="flex flex-col h-full w-full text-left">
       <div className="flex-1 overflow-y-auto custom-scrollbar p-1 pr-2 space-y-8 pb-4">
         {/* 1. AI 요약 */}
-        <AiSummaryCard />
+        <AiSummaryCard type="part" />
 
         {/* 2. 부품명 */}
         <div>
