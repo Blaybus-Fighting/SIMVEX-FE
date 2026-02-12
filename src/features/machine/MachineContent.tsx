@@ -1,42 +1,72 @@
 import MachineSection from "./components/MachineSection.tsx";
 import AiSummaryCard from "./components/AiSummaryCard.tsx";
+import type { ModelObject } from "@/types/model.ts";
 
-export default function MachineContent() {
+interface Props {
+  selectedModel: ModelObject | null;
+}
+
+// 이론 한 덩어리
+type theoryItem = {
+  num: string;
+  title: string;
+  body: string;
+};
+
+function parseTheory(text: string | null): theoryItem[] {
+  if (!text) return [];
+
+  const normalized = text.replace(/\r\n/g, "\n").trim();
+
+  // "1. 제목: 내용" 패턴을 전부 잡아서 배열로 만들기
+  const items: theoryItem[] = [];
+  const re = /(\d+)\.\s*([^:]+?)\s*:\s*([\s\S]*?)(?=\n?\s*\d+\.\s*|$)/g;
+
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(normalized)) !== null) {
+    const num = m[1].trim(); // 숫자
+    const title = m[2].trim(); // 제목
+    const body = m[3].trim(); // 내용
+    items.push({ num, title, body });
+  }
+
+  return items;
+}
+
+export default function MachineContent({ selectedModel }: Props) {
+  const theories = parseTheory(selectedModel?.mainTheory ?? "");
+
   return (
     // 전체 스크롤 적용 (h-full 필수)
     <div className="h-full overflow-y-auto custom-scrollbar p-1 pr-2 pb-10">
       {/* AI 요약 (기계 전체) */}
-      <AiSummaryCard />
+      <AiSummaryCard type="machine" />
 
       <div className="flex flex-col gap-8 mt-8">
         <MachineSection title="용도">
-          공작 기계 바이스는 절삭 및 가공 중 공작물을 정확한 위치에 고정하기
-          위한 장치입니다.
+          {selectedModel?.usage}
           <br />
-          다양한 가공 환경에서 필수적인 역할을 수행하며, 안정적인 클램핑 성능을
-          제공합니다.
+          {selectedModel?.description}
         </MachineSection>
 
         <MachineSection title="주요 이론">
           <div className="space-y-6">
-            <div>
-              <p className="font-bold text-gray-100 text-text-3 mb-1">
-                1. 나사의 원리
-              </p>
+            {theories.length === 0 ? (
               <p className="text-gray-200 text-text-4 leading-relaxed">
-                리드 스크류의 회전 운동을 가동 죠의 직선 운동으로 변환하여
-                강력한 압착력을 발생시키는 기계적 메커니즘이 적용됩니다.
+                해당 모델의 이론이 없습니다.
               </p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-100 text-text-3 mb-1">
-                2. 마찰력과 고정
-              </p>
-              <p className="text-gray-200 text-text-4 leading-relaxed">
-                죠(Jaw)와 공작물 사이의 마찰력을 극대화하여 슬립 현상을
-                방지합니다.
-              </p>
-            </div>
+            ) : (
+              theories.map((t) => (
+                <div key={t.num}>
+                  <p className="font-bold text-gray-100 text-text-3 mb-1">
+                    {t.num}. {t.title}
+                  </p>
+                  <p className="text-gray-200 text-text-4 leading-relaxed">
+                    {t.body}
+                  </p>
+                </div>
+              ))
+            )}
           </div>
         </MachineSection>
       </div>

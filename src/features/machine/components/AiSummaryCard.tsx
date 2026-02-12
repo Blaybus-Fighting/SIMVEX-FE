@@ -2,7 +2,11 @@
 import AiSummaryIcon from "@/assets/icons/ai_summary.svg?react";
 import { Input } from "@headlessui/react";
 
-export default function AiSummaryCard() {
+type AIProps = {
+  type: string;
+};
+
+export default function AiSummaryCard({ type }: AIProps) {
   return (
     <div className="mb-8">
       {/* 헤더 */}
@@ -16,7 +20,11 @@ export default function AiSummaryCard() {
       {/* 요약 텍스트 박스 */}
       <Input
         className="w-full bg-background-200 border border-white/5 rounded-xl p-4 shadow-inner placeholder:text-sm"
-        placeholder="재질 및 역할, 해당 부품을 사용하는 완제품 사례 4줄 내로 요약"
+        placeholder={
+          type == "machine"
+            ? "이론 및 용도 등을 4줄 내로 요약"
+            : "재질 및 역할, 해당 부품을 사용하는 완제품 사례 4줄 내로 요약"
+        }
       />
     </div>
   );
