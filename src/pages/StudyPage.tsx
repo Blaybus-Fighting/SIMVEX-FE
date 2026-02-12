@@ -21,7 +21,6 @@ export default function StudyPage() {
   const clearPartList = usePartListStore((state) => state.clear);
   const clearPart = usePartStore((state) => state.clear);
   const [loading, setLoading] = useState(false);
-  const [selectedPart, setSelectedPart] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const modelId = Number(searchParams.get("modelId"));
 
@@ -30,7 +29,6 @@ export default function StudyPage() {
     return () => {
       clearPartList();
       clearPart();
-      setSelectedPart(null);
     };
   }, [clearPartList, clearPart]);
 
@@ -164,8 +162,7 @@ export default function StudyPage() {
         {/* 기계/부품 패널: 1 비율 */}
         <div className="flex-1 min-w-0">
           <MachinePanel
-            selectedPart={selectedPart}
-            onPartSelect={setSelectedPart}
+          // onPartSelect={setSelectedPart}
           />
         </div>
 
