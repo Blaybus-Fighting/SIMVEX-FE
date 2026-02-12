@@ -21,7 +21,7 @@ export default function AiSummaryCard({ type }: AIProps) {
       <Input
         className="w-full bg-background-200 border border-white/5 rounded-xl p-4 shadow-inner placeholder:text-sm"
         placeholder={
-          type == "machine"
+          type === "machine"
             ? "이론 및 용도 등을 4줄 내로 요약"
             : "재질 및 역할, 해당 부품을 사용하는 완제품 사례 4줄 내로 요약"
         }
