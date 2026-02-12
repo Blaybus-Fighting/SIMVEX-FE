@@ -43,15 +43,7 @@ export default function PartContent({ selectedPart }: Props) {
         {/* 4. 역할 설명 (펼치기 기능) */}
         <MachineSection title="역할">
           <span className="block mb-2">
-            {selectedPart.roleDescription.split("[").map((text, index) =>
-              index === 0 ? (
-                text
-              ) : (
-                <span key={index}>
-                  <br />[{text}
-                </span>
-              ),
-            )}
+            {selectedPart.roleDescription.replace(/\[/g, "\n[")}
           </span>
         </MachineSection>
       </div>

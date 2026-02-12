@@ -161,9 +161,7 @@ export default function StudyPage() {
 
         {/* 기계/부품 패널: 1 비율 */}
         <div className="flex-1 min-w-0">
-          <MachinePanel
-          // onPartSelect={setSelectedPart}
-          />
+          <MachinePanel />
         </div>
 
         {/* 노트/AI 패널: 1 비율 */}
