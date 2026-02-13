@@ -9,6 +9,7 @@ import { RobotGripper } from "./models/RobotGripper";
 import { Suspension } from "./models/Suspension";
 import type { ViewData } from "@/types/session";
 import { putSession } from "@/api/sessionApi";
+import { V4Engine } from "./models/V4Engine";
 
 type Props = {
   explode: number;
@@ -29,7 +30,7 @@ const MODEL_COMPONENT_MAP: Record<string, ModelComponent> = {
   "Robot-Gripper": RobotGripper,
   Suspension: Suspension,
   "Machine-Vice": MachineVice,
-  // "V4-Engine": V4Engine
+  "V4-Engine": V4Engine,
 };
 
 // viewData를 실제 camera/controls에 반영하는 내부 컴포넌트
