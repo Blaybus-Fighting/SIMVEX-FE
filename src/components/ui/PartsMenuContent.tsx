@@ -64,12 +64,7 @@ export default function PartsMenuContent({
                 title={p.name}
                 onClick={() => handleDetailPart(p.id)}
               >
-                {open && p.modelUrl ? (
-                  <PartThumb3D url={p.modelUrl} />
-                ) : (
-                  <span className="text-xs text-white/70">{p.name}</span>
-                )}
-
+                {open && p.modelUrl && <PartThumb3D url={p.modelUrl} />}
                 <span className="text-xs text-gray-400">{p.name}</span>
               </MenuItem>
             ))}

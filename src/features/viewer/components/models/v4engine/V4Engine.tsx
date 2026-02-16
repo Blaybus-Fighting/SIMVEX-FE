@@ -148,7 +148,7 @@ export function V4Engine({
       />
 
       <mesh
-        name="pison-ring002"
+        name="piston-ring002"
         castShadow
         receiveShadow
         geometry={nodes["Piston_Ring002"].geometry}
