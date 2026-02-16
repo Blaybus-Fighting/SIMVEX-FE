@@ -29,7 +29,6 @@ export const base = {
   "conrod-bolt002": new THREE.Vector3(-0.314, 0.669, -2.687),
   "conrod-bolt003": new THREE.Vector3(0.443, 0.723, -2.726),
 
-  // group name 기준 (원본 코드 group name="sold-1018")
   "solid-1018": new THREE.Vector3(0.085, 0.407, -2.713),
   "connecting-rod001": new THREE.Vector3(-0.055, 2.401, -2.669),
 
@@ -72,14 +71,6 @@ type Rule = {
 };
 
 const RULES: Rule[] = [
-  // 큰 덩어리(솔리드): 아래/옆으로 살짝
-  {
-    match: /^solid-/i,
-    dist: 0.55,
-    dir: new THREE.Vector3(0.2, -1, 0),
-    jitter: 0.25,
-  },
-
   // 링/핀/볼트는 멀리 벌리기 (작은 부품)
   {
     match: /ring/i,
