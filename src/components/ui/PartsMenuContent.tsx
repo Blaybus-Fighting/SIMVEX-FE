@@ -1,8 +1,10 @@
 import { getPart } from "@/api/partApi";
+import PartThumb3D from "@/features/viewer/components/PartThumb3D";
 import { usePartStore } from "@/store/partStore";
 import type { PartObject } from "@/types/part";
-import PartThumb3D from "@features/viewer/components/PartThumb3D";
+// import PartThumb3D from "@features/viewer/components/PartThumb3D";
 import { MenuItem, MenuItems, Transition } from "@headlessui/react";
+import clsx from "clsx";
 import { Fragment, useEffect } from "react";
 
 type PartsMenuContentProps = {
@@ -24,10 +26,7 @@ export default function PartsMenuContent({
     if (open) getParts();
   }, [open, getParts]);
 
-  const {
-    // part,
-    setPart,
-  } = usePartStore();
+  const { part, setPart } = usePartStore();
 
   const handleDetailPart = async (partId: number) => {
     const res = await getPart(partId);
@@ -50,26 +49,23 @@ export default function PartsMenuContent({
           <div className="p-2 text-sm text-gray-300">불러오는 중...</div>
         ) : (
           <div className={["grid gap-2", gridColsClass].join(" ")}>
-            {parts.map((part) => (
+            {parts.map((p) => (
               <MenuItem
-                key={part.id}
+                key={p.id}
                 as="button"
-                className="
-                relative flex h-[3.813rem] w-[3.813rem] 
-                items-center justify-center rounded-sm 
-                bg-background-100 
-                border border-transparent
-                overflow-hidden
-                transition
-                hover:border-primary-100"
-                title={part.name}
-                onClick={() => handleDetailPart(part.id)}
-              >
-                {open && part.modelUrl ? (
-                  <PartThumb3D url={part.modelUrl} />
-                ) : (
-                  <span className="text-xs text-white/70">{part.name}</span>
+                className={clsx(
+                  "relative flex h-[3.813rem] w-[3.813rem]",
+                  "items-center justify-center rounded-sm",
+                  "bg-background-100",
+                  "overflow-hidden transition",
+                  "hover:border-primary-100",
+                  part?.name == p.name ? "border border-primary-100" : null,
                 )}
+                title={p.name}
+                onClick={() => handleDetailPart(p.id)}
+              >
+                {open && p.modelUrl && <PartThumb3D url={p.modelUrl} />}
+                <span className="text-xs text-gray-400">{p.name}</span>
               </MenuItem>
             ))}
           </div>

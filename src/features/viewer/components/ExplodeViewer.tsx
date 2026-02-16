@@ -1,12 +1,21 @@
 import * as THREE from "three";
-import { Suspense, useCallback, useEffect, useRef } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+
 import { MachineVice } from "./models/MachineVice";
-import { useDetailModelStore } from "@/store/modelStore";
 import { RobotGripper } from "./models/RobotGripper";
 import { Suspension } from "./models/Suspension";
+import { V4Engine } from "./models/v4engine/V4Engine";
+
+import { useDetailModelStore } from "@/store/modelStore";
 import type { ViewData } from "@/types/session";
 import { putSession } from "@/api/sessionApi";
 
@@ -29,62 +38,129 @@ const MODEL_COMPONENT_MAP: Record<string, ModelComponent> = {
   "Robot-Gripper": RobotGripper,
   Suspension: Suspension,
   "Machine-Vice": MachineVice,
-  // "V4-Engine": V4Engine
+  "V4-Engine": V4Engine,
 };
 
-// viewData를 실제 camera/controls에 반영하는 내부 컴포넌트
+/**
+ * viewData를 실제 camera/controls에 반영하는 내부 컴포넌트
+ * ✅ 요구사항:
+ * - 카메라 갱신(복원)은 계속 필요
+ * - explode 슬라이더를 움직이는 동안에는 복원 금지
+ * - explode가 "멈춘 뒤"에만(일정 시간 변화 없음) 최신 viewData를 적용
+ */
 function ApplyViewData({
   viewData,
   controlsRef,
   cameraRef,
+  isExplodeChanging,
 }: {
   viewData?: ViewData;
   controlsRef: React.RefObject<OrbitControlsImpl | null>;
   cameraRef: React.RefObject<THREE.PerspectiveCamera | null>;
+  isExplodeChanging: boolean;
 }) {
+  const pendingRef = useRef<ViewData | null>(null);
+
+  // 마지막으로 적용한 viewData를 식별(중복 적용 방지)
+  // meta.savedAt이 있으면 그걸 쓰고, 없으면 camera 값으로 대체
+  const lastAppliedKeyRef = useRef<string | null>(null);
+
+  const apply = useCallback(
+    (vd: ViewData) => {
+      const camera = cameraRef.current;
+      const controls = controlsRef.current;
+      if (!camera || !controls) return;
+
+      // camera 복원
+      camera.position.set(
+        vd.camera.position.x,
+        vd.camera.position.y,
+        vd.camera.position.z,
+      );
+      camera.up.set(vd.camera.up.x, vd.camera.up.y, vd.camera.up.z);
+
+      // fov/zoom 적용
+      camera.fov = vd.camera.fov;
+      camera.zoom = vd.viewport.zoom ?? 1;
+      camera.updateProjectionMatrix();
+
+      // OrbitControls target 복원
+      controls.target.set(
+        vd.camera.target.x,
+        vd.camera.target.y,
+        vd.camera.target.z,
+      );
+
+      // pan 최소 복원 (world offset 가정)
+      const panX = vd.viewport.pan?.x ?? 0;
+      const panY = vd.viewport.pan?.y ?? 0;
+      if (panX !== 0 || panY !== 0) {
+        const pan = new THREE.Vector3(panX, panY, 0);
+        camera.position.add(pan);
+        controls.target.add(pan);
+      }
+
+      controls.update();
+    },
+    [cameraRef, controlsRef],
+  );
+
+  // viewData가 들어오면:
+  // - explode 조작 중이면 보류
+  // - 아니면 즉시 적용
   useEffect(() => {
     if (!viewData) return;
-    const camera = cameraRef.current;
-    const controls = controlsRef.current;
-    if (!camera || !controls) return;
 
-    // camera 복원
-    camera.position.set(
-      viewData.camera.position.x,
-      viewData.camera.position.y,
-      viewData.camera.position.z,
-    );
-    camera.up.set(
-      viewData.camera.up.x,
-      viewData.camera.up.y,
-      viewData.camera.up.z,
-    );
+    const key =
+      viewData.meta?.savedAt ??
+      JSON.stringify({
+        p: viewData.camera.position,
+        t: viewData.camera.target,
+        u: viewData.camera.up,
+        f: viewData.camera.fov,
+        z: viewData.viewport.zoom,
+      });
 
-    // fov/zoom 적용
-    // (PerspectiveCamera 기준: fov + zoom 둘 다 존재. zoom 사용 시 updateProjectionMatrix 필요)
-    camera.fov = viewData.camera.fov;
-    camera.zoom = viewData.viewport.zoom ?? 1;
-    camera.updateProjectionMatrix();
+    // 같은 viewData를 반복 적용하지 않음
+    if (key === lastAppliedKeyRef.current) return;
 
-    // OrbitControls target 복원
-    controls.target.set(
-      viewData.camera.target.x,
-      viewData.camera.target.y,
-      viewData.camera.target.z,
-    );
-
-    // pan/rotation은 프로젝트마다 정의가 달라 OrbitControls에 1:1 매핑이 애매함
-    // 일단 pan을 world offset으로 해석해서 target과 camera를 같이 이동시키는 방식으로 최소 복원
-    const panX = viewData.viewport.pan?.x ?? 0;
-    const panY = viewData.viewport.pan?.y ?? 0;
-    if (panX !== 0 || panY !== 0) {
-      const pan = new THREE.Vector3(panX, panY, 0);
-      camera.position.add(pan); // camera.position.x += ... 대신
-      controls.target.add(pan);
+    // 현재 분해 중이면
+    if (isExplodeChanging) {
+      pendingRef.current = viewData; // 카메라를 복원하지 않고 최신 viewData의 카메라로 분해 진행
+      return;
     }
 
-    controls.update();
-  }, [viewData, controlsRef, cameraRef]);
+    apply(viewData); // 분해가 멈추면 최신 카메라 위치로 복원
+    lastAppliedKeyRef.current = key;
+    pendingRef.current = null;
+  }, [viewData, isExplodeChanging, apply]);
+
+  // explode 조작이 끝난 순간(isExplodeChanging: true -> false)에
+  // 보류된 viewData가 있으면 그때 1회 적용
+  useEffect(() => {
+    if (isExplodeChanging) return;
+    const pending = pendingRef.current;
+    if (!pending) return;
+
+    const key =
+      pending.meta?.savedAt ??
+      JSON.stringify({
+        p: pending.camera.position,
+        t: pending.camera.target,
+        u: pending.camera.up,
+        f: pending.camera.fov,
+        z: pending.viewport.zoom,
+      });
+
+    if (key === lastAppliedKeyRef.current) {
+      pendingRef.current = null;
+      return;
+    }
+
+    apply(pending); // 멈춘 뒤에만 적용
+    lastAppliedKeyRef.current = key;
+    pendingRef.current = null; // 적용됐으니 pendingRef값을 비움
+  }, [isExplodeChanging, apply]);
 
   return null;
 }
@@ -114,8 +190,6 @@ function buildViewData(params: {
     },
     viewport: {
       zoom: camera.zoom ?? 1,
-      // pan/rotation은 OrbitControls에서 “정확한 의미”가 프로젝트마다 달라서
-      //    지금은 최소 정보만 유지 (필요하면 여기 확장)
       pan: { x: 0, y: 0 },
       rotation: { x: 0, y: 0, z: 0 },
     },
@@ -138,16 +212,37 @@ export default function ExplodeViewer({
   sessionId,
 }: Props) {
   const { model } = useDetailModelStore();
-
   const SelectedModel = model?.name ? MODEL_COMPONENT_MAP[model.name] : null;
 
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
+  // explode 조작 중 여부 (슬라이더 움직이는 동안 true)
+  const [isExplodeChanging, setIsExplodeChanging] = useState(false);
+  const explodeIdleTimerRef = useRef<number | null>(null);
+
+  // explode가 일정 시간 변하지 않으면 멈춘 걸로 판단
+  useEffect(() => {
+    setIsExplodeChanging(true);
+
+    if (explodeIdleTimerRef.current) {
+      window.clearTimeout(explodeIdleTimerRef.current);
+    }
+
+    explodeIdleTimerRef.current = window.setTimeout(() => {
+      setIsExplodeChanging(false);
+    }, 250); // 필요하면 150~400ms 사이로 조절
+
+    return () => {
+      if (explodeIdleTimerRef.current)
+        window.clearTimeout(explodeIdleTimerRef.current);
+    };
+  }, [explode]);
+
   // 디바운스 저장용
   const saveTimerRef = useRef<number | null>(null);
   const latestViewDataRef = useRef<ViewData | null>(null);
-  const dirtyRef = useRef(false); // 저장 필요 여부
+  const dirtyRef = useRef(false);
 
   useEffect(() => {
     if (url) useGLTF.preload(url);
@@ -161,14 +256,12 @@ export default function ExplodeViewer({
 
     dirtyRef.current = false;
 
-    // cleanup에서도 호출될 수 있어서 fire-and-forget
     void putSession(modelId, sessionId, payload)
       .then((res) => {
         console.log("세션 업데이트 성공: ", res.data);
       })
       .catch((e) => {
         console.error("putSession 실패:", e);
-        // 실패하면 다시 dirty로 돌려 재시도 가능하게
         dirtyRef.current = true;
       });
   }, [modelId, sessionId]);
@@ -179,14 +272,10 @@ export default function ExplodeViewer({
     const controls = controlsRef.current;
     if (!camera || !controls) return;
 
-    // 최신 상태 스냅샷 갱신
     latestViewDataRef.current = buildViewData({ camera, controls, explode });
     dirtyRef.current = true;
 
-    // 3초 디바운스
-    if (saveTimerRef.current) {
-      window.clearTimeout(saveTimerRef.current);
-    }
+    if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
     saveTimerRef.current = window.setTimeout(() => {
       flushSave();
     }, 3000);
@@ -201,27 +290,27 @@ export default function ExplodeViewer({
   useEffect(() => {
     return () => {
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
-      flushSave(); // 마지막 값 저장
+      flushSave();
     };
   }, [flushSave]);
 
   return (
     <Canvas
       shadows
-      dpr={[1, 2]} // 레티나 대응
+      dpr={[1, 2]}
       camera={{ position: [2.2, 1.2, 1.2], fov: 45, near: 0.1, far: 100 }}
       onCreated={({ camera }) => {
-        cameraRef.current = camera as THREE.PerspectiveCamera; // cameraRef 연결
+        cameraRef.current = camera as THREE.PerspectiveCamera;
       }}
     >
-      {/* viewData를 camera와 controls에 주입 */}
+      {/* viewData -> camera/controls 적용 (explode 조작 중에는 적용 금지) */}
       <ApplyViewData
         viewData={viewData}
         controlsRef={controlsRef}
         cameraRef={cameraRef}
+        isExplodeChanging={isExplodeChanging}
       />
 
-      {/* 기본 조명 */}
       <ambientLight intensity={0.6} />
       <directionalLight
         position={[5, 7, 5]}
@@ -231,26 +320,13 @@ export default function ExplodeViewer({
         shadow-mapSize-height={2048}
       />
 
-      {/* 바닥(그림자 받기용) - 필요 없으면 삭제 */}
-      {/* <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.9, 0]}
-        receiveShadow
-      >
-        <planeGeometry args={[20, 20]} />
-        <shadowMaterial opacity={0.25} />
-      </mesh> */}
-
       <Suspense fallback={null}>
-        {/* HDRI 환경광(선택). 없어도 됨 */}
         <Environment preset="warehouse" />
-
         {SelectedModel && <SelectedModel explode={explode} />}
       </Suspense>
 
-      {/* 마우스 회전/줌 */}
       <OrbitControls
-        ref={controlsRef} // controlsRef 연결
+        ref={controlsRef}
         enableDamping
         makeDefault
         minDistance={1.6}
@@ -263,15 +339,3 @@ export default function ExplodeViewer({
     </Canvas>
   );
 }
-
-// 미리 로드(선택)
-// useGLTF.preload(url);
-
-/**
- * [ 가져온 viewData를 어디에 적용시켰나 ]
- * • viewData.explode → explode state → <SelectedModel explode={explode} /> 적용
-	 •	viewData.camera.position / up / fov / viewport.zoom → camera에 적용
-	 •	viewData.camera.target → OrbitControls.target에 적용
-	 •	viewport.pan은 “최소 복원”으로 target+camera에 오프셋 적용
-   (정확한 pan 의미가 스크린 좌표인지 월드 좌표인지에 따라 더 정교하게 바꿀 수 있음
- */
