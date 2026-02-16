@@ -5,7 +5,7 @@ import { LoginModal } from "@/features/auth/components/LoginModal";
 import LogoutIcon from "@assets/icons/logout.svg?react";
 
 export default function UserMenu() {
-  const {user, isLoggedIn, logout} = useAuthStore();
+  const { user, isLoggedIn, logout } = useAuthStore();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,8 +52,7 @@ export default function UserMenu() {
                 />
               ) : (
                 // 이미지 없을 때 (기본 프사): 회색 배경 + 글자
-                <div
-                  className="w-9 h-9 rounded-full bg-gray-500 flex items-center justify-center text-white font-medium">
+                <div className="w-9 h-9 rounded-full bg-gray-500 flex items-center justify-center text-white font-medium">
                   {initial}
                 </div>
               )}
@@ -61,9 +60,7 @@ export default function UserMenu() {
 
             {/* 드롭다운 메뉴 */}
             {isMenuOpen && (
-              <div
-                className="absolute right-0 mt-3 w-48 bg-black border border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100"
-              >
+              <div className="absolute right-0 mt-3 w-48 bg-black border border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
                 {/* 1. 유저 정보 영역 */}
                 <div className="px-4 py-4 border-b border-gray-700">
                   <p className="text-base font-bold text-white mb-0.5">
@@ -77,7 +74,7 @@ export default function UserMenu() {
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-3 text-sm text-gray-100 hover:bg-gray-900 transition-colors flex items-center gap-2"
                 >
-                  <LogoutIcon className="w-5 h-5"/>
+                  <LogoutIcon className="w-5 h-5" />
                   <span>로그아웃</span>
                 </button>
               </div>
@@ -94,7 +91,7 @@ export default function UserMenu() {
       </div>
 
       {/* 로그인 모달 */}
-      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
+      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 }
