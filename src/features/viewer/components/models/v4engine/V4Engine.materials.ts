@@ -1,6 +1,6 @@
 // 선택한 부품 하이라이트 + 나머지 불투명 처리용
 import * as THREE from "three";
-import type { V4PartName } from "./v4engine.explode";
+import type { V4PartName } from "./V4Engine.explode";
 
 /**
  * V4Engine.glb의 mesh/groupd name 규칙에 맞춘 선택 하이라이트 로직

@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import type { ThreeElements } from "@react-three/fiber";
-import { pos } from "./v4engine.explode";
 import { createV4MaterialResolver } from "./V4Engine.materials";
 import { usePartStore } from "@/store/partStore";
 import { useEffect, useMemo } from "react";
+import { pos } from "./V4Engine.explode";
 
 type GLTFResult = GLTF & {
   nodes: Record<string, THREE.Mesh>;
