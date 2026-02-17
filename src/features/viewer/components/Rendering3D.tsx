@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import Dropdown from "@/components/ui/DropdownBtn";
 import PartsDropdown from "@/components/ui/PartsDropdownBtn";
 import { ResolutionSlider } from "@/components/ui/ResolutionSlider";
@@ -17,27 +17,14 @@ export default function Rendering3D({ modelName }: Rendering3DProps) {
   const { viewData, setViewData } = useViewDataStore();
   const { model } = useDetailModelStore();
 
-  const [explodePct, setExplodePct] = useState(0);
+  const explodePct = (viewData?.explode ?? 0) * 100;
 
-  // 화면 진입/세션 로드 등으로 viewData.explode가 들어오면 슬라이더 값 동기화
-  useEffect(() => {
-    if (viewData?.explode == null) return;
-
-    const nextPct = viewData.explode * 100;
-    setExplodePct((prev) => (prev !== nextPct ? nextPct : prev));
-  }, [viewData?.explode]);
-
-  // 슬라이더 조절 → UI 즉시 반영 + 3D용 explode(0~1) 업데이트
+  // 슬라이더 조절 → viewData.explode 업데이트(0~1)
   const handleExplodeUpdate = useCallback(
     (pct: number) => {
-      setExplodePct(pct);
-
       const explode = Math.min(1, Math.max(0, pct / 100));
-
       if (!viewData) return;
 
-      // 슬라이더에서 바뀐 분해 정도를 3D에 반영하려면
-      // ExplodeViewer에 내려주는 explode 값(= viewData.explode)이 바뀌어야 함
       setViewData({
         ...viewData,
         explode,
